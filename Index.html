@@ -1,0 +1,975 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Magical Olympiad World</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Baloo+2:wght@500;700;800&display=swap">
+<style>
+/* Layout: one centred column of big rounded play cards under a slim sticky bar; every control is finger-sized. */
+:root{--sky:#EAF3FF;--sky2:#D9E8FF;--card:#FFFFFF;--tile:#F3F7FF;--ink:#1F2552;--ink2:#565C8A;--line:#C5D5F5;--blue:#2F7BF5;--blue-d:#1D5AC2;--on-blue:#FFFFFF;--purple:#7B4FE0;--purple-d:#5A34B8;--on-purple:#FFFFFF;--yellow:#FFC93C;--yellow-d:#DDA20F;--on-yellow:#3B2A00;--mint:#3ED6A8;--mint-d:#1FA880;--on-mint:#04382A;--good:#128A5E;--good-bg:#DCF7EA;--oops:#C2571B;--oops-bg:#FFE9DA;--info-bg:#EDE6FF;--sel:#E4DAFF;--trace:#CFE0FF;--shadow:rgba(47,80,160,.16);
+ --display:"Baloo 2","Andika",system-ui,sans-serif;--body:"Andika","Baloo 2",system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--sky:#12162F;--sky2:#1A2046;--card:#222956;--tile:#2B3368;--ink:#F2F5FF;--ink2:#B6BEE8;--line:#404A8A;--blue:#6AA5FF;--blue-d:#3F78D6;--on-blue:#0B1230;--purple:#A98BFF;--purple-d:#7A5CD6;--on-purple:#150B33;--yellow:#FFD45E;--yellow-d:#C99A1E;--on-yellow:#3B2A00;--mint:#4FE0B5;--mint-d:#27A983;--on-mint:#04382A;--good:#5BE3AE;--good-bg:#17463A;--oops:#FFAA78;--oops-bg:#4B2E20;--info-bg:#33295F;--sel:#3D3380;--trace:#35407E;--shadow:rgba(0,0,0,.4);color-scheme:dark}}
+:root[data-theme="dark"]{--sky:#12162F;--sky2:#1A2046;--card:#222956;--tile:#2B3368;--ink:#F2F5FF;--ink2:#B6BEE8;--line:#404A8A;--blue:#6AA5FF;--blue-d:#3F78D6;--on-blue:#0B1230;--purple:#A98BFF;--purple-d:#7A5CD6;--on-purple:#150B33;--yellow:#FFD45E;--yellow-d:#C99A1E;--on-yellow:#3B2A00;--mint:#4FE0B5;--mint-d:#27A983;--on-mint:#04382A;--good:#5BE3AE;--good-bg:#17463A;--oops:#FFAA78;--oops-bg:#4B2E20;--info-bg:#33295F;--sel:#3D3380;--trace:#35407E;--shadow:rgba(0,0,0,.4);color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--sky);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.45}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:4px solid var(--yellow);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0;text-wrap:balance}
+p{margin:0}
+#app{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:0 40px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:10px;padding:10px 0;background:var(--sky)}
+.brand{font-family:var(--display);font-weight:800;font-size:1.25rem;color:var(--purple);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topr{display:flex;align-items:center;gap:8px}
+.starc{font-family:var(--display);font-weight:800;background:var(--card);border-radius:99px;padding:6px 14px;box-shadow:0 3px 0 var(--line);white-space:nowrap}
+.ib{width:56px;height:56px;flex:none;border-radius:18px;border:0;background:var(--card);box-shadow:0 4px 0 var(--line);font-size:1.5rem;display:grid;place-items:center}
+.ib:active,.btn:active,.opt:active{transform:translateY(3px);box-shadow:none}
+.btn{min-height:56px;padding:10px 22px;border-radius:20px;border:0;font-family:var(--display);font-weight:800;font-size:1.15rem;background:var(--card);box-shadow:0 5px 0 var(--line);display:inline-flex;align-items:center;justify-content:center;gap:8px;text-align:center}
+.btn.big{min-height:66px;font-size:1.35rem;padding-inline:28px}
+.btn.sm{min-height:44px;font-size:1rem;padding:6px 14px;border-radius:14px;box-shadow:0 3px 0 var(--line)}
+.btn.blue{background:var(--blue);color:var(--on-blue);box-shadow:0 5px 0 var(--blue-d)}
+.btn.purple{background:var(--purple);color:var(--on-purple);box-shadow:0 5px 0 var(--purple-d)}
+.btn.yellow{background:var(--yellow);color:var(--on-yellow);box-shadow:0 5px 0 var(--yellow-d)}
+.btn.mint{background:var(--mint);color:var(--on-mint);box-shadow:0 5px 0 var(--mint-d)}
+.btn.ghost{background:var(--card);color:var(--ink)}
+.btn.danger{background:var(--oops-bg);color:var(--oops);box-shadow:0 5px 0 var(--line)}
+.btn:disabled{opacity:.45;cursor:default}
+.cta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:center}
+.sub{color:var(--ink2);max-width:62ch}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:.85rem;font-weight:700;padding:3px 12px;border-radius:99px;background:var(--tile);color:var(--ink2);white-space:nowrap}
+.chip.lv1{background:var(--good-bg);color:var(--good)}.chip.lv2{background:var(--info-bg);color:var(--purple)}.chip.lv3{background:var(--oops-bg);color:var(--oops)}
+.chip.okc{background:var(--good-bg);color:var(--good)}.chip.noc{background:var(--oops-bg);color:var(--oops)}
+.chipb{min-height:44px;padding:6px 14px;border-radius:14px;border:2px solid var(--line);background:var(--tile);font-weight:700}
+.chipb.sel{border-color:var(--purple);background:var(--sel)}
+/* hero */
+.hero{position:relative;background:linear-gradient(180deg,var(--sky2),var(--card));border-radius:32px;padding:26px 18px 28px;text-align:center;display:flex;flex-direction:column;gap:18px;align-items:center;box-shadow:0 8px 24px var(--shadow);overflow:hidden}
+.hero h1{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:800;color:var(--purple);position:relative}
+.sky{position:absolute;inset:0;pointer-events:none}
+.cl{position:absolute;width:120px;height:38px;border-radius:99px;background:var(--card);opacity:.8}
+.cl::before{content:"";position:absolute;left:24px;top:-18px;width:54px;height:44px;border-radius:50%;background:inherit}
+.c1{left:-20px;top:26px;animation:drift 16s ease-in-out infinite alternate}.c2{right:-10px;top:96px;transform:scale(.75);animation:drift 20s ease-in-out infinite alternate-reverse}
+.st{position:absolute;color:var(--yellow);font-style:normal;font-size:1.5rem;animation:twinkle 2.4s ease-in-out infinite}.s1{left:14%;top:58%}.s2{right:16%;top:16%;animation-delay:.8s}.s3{right:8%;top:66%;animation-delay:1.5s}
+@keyframes drift{to{translate:40px 0}}@keyframes twinkle{50%{opacity:.25;scale:.7}}
+.greet{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:8px}
+.avb{border:0;background:none;padding:0}
+.bubble{background:var(--card);border-radius:22px;padding:10px 16px;box-shadow:0 4px 0 var(--line);display:flex;flex-direction:column;font-size:1rem;align-self:center;max-width:210px}
+.bubble b{font-family:var(--display);font-size:1.3rem;color:var(--blue)}
+.av .arm{transform-origin:96px 124px}.av.wave .arm{animation:wave 1.4s ease-in-out infinite}
+@keyframes wave{50%{rotate:-18deg}}
+.who{position:relative;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.mini{display:inline-flex}
+.namef{position:relative;display:flex;flex-direction:column;gap:8px;font-weight:700}.namef div{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+input,select{min-height:52px;border-radius:14px;border:2px solid var(--line);background:var(--card);padding:6px 14px;max-width:100%}
+.hero .cta{position:relative}
+.worlds{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:18px}
+.world,.cont{display:flex;align-items:center;gap:14px;text-align:left;border:0;border-radius:26px;padding:18px;box-shadow:0 6px 0 var(--blue-d);background:var(--blue);color:var(--on-blue);min-width:0}
+.world.ma{background:var(--purple);color:var(--on-purple);box-shadow:0 6px 0 var(--purple-d)}
+.wi{font-size:2.6rem;line-height:1;flex:none}
+.wt{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}.wt b,.cont b{font-family:var(--display);font-size:1.5rem;line-height:1.1}
+.bar{height:10px;border-radius:99px;background:rgba(255,255,255,.35);overflow:hidden}.bar i{display:block;height:100%;background:var(--yellow);border-radius:99px}
+.goalc{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:26px;padding:14px 18px;box-shadow:0 6px 0 var(--line)}
+.goalc b{font-family:var(--display);font-size:1.3rem}.ring{flex:none}
+/* dashboard */
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 16px}
+.tab{flex:1;min-width:150px;min-height:60px;border-radius:20px;border:3px solid var(--line);background:var(--card);font-family:var(--display);font-weight:800;font-size:1.2rem}
+.tab.on{background:var(--purple);color:var(--on-purple);border-color:var(--purple-d)}
+.cont{width:100%;background:var(--yellow);color:var(--on-yellow);box-shadow:0 6px 0 var(--yellow-d)}.cont span:nth-child(2){display:flex;flex-direction:column;flex:1;min-width:0}.goarrow{font-size:1.8rem}
+.sec{font-size:1.5rem;margin:26px 0 4px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-top:14px}
+.tcard{position:relative;display:grid;grid-template-columns:auto 1fr;grid-template-areas:"i n" "i s" "m m";gap:2px 12px;align-items:center;text-align:left;border:3px solid var(--line);border-radius:24px;background:var(--card);padding:14px 14px 12px;box-shadow:0 5px 0 var(--line);min-width:0}
+.tcard.done{border-color:var(--mint-d)}
+.tcard b{grid-area:n;font-family:var(--display);font-size:1.15rem;line-height:1.15;padding-right:22px}
+.ti{grid-area:i;font-size:2.3rem}.tn{position:absolute;right:12px;top:8px;font-size:.8rem;font-weight:700;color:var(--ink2);font-variant-numeric:tabular-nums}
+.tst{grid-area:s;color:var(--yellow-d);font-size:1.25rem;letter-spacing:2px}.tst i{font-style:normal;color:var(--line)}
+.tm{grid-area:m;display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.tick{position:absolute;right:10px;bottom:10px;color:var(--good);font-weight:800}
+.badges,.newb{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:12px}
+.badge{background:var(--card);border-radius:20px;padding:12px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;opacity:.55;border:2px dashed var(--line)}
+.badge span{font-size:2rem;filter:grayscale(1)}.badge small{color:var(--ink2);font-size:.8rem}.badge b{font-family:var(--display)}
+.badge.got{opacity:1;border:2px solid var(--yellow-d);background:var(--card)}.badge.got span{filter:none}
+.panel{background:var(--card);border-radius:30px;padding:24px 20px;box-shadow:0 8px 24px var(--shadow);display:flex;flex-direction:column;gap:16px;margin-top:8px}
+.panel h2{font-size:1.9rem;color:var(--purple)}.panel h3{font-size:1.25rem;margin-top:8px}
+.exs{display:flex;flex-wrap:wrap;gap:14px}.ex{flex:1;min-width:220px;background:var(--tile);border-radius:22px;padding:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;text-align:center}.ex p{width:100%}
+.pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.pk{min-height:64px;border-radius:20px;border:3px solid var(--line);background:var(--tile);font-family:var(--display);font-weight:700;font-size:1.1rem;padding:8px 14px;text-align:left}.pk.all{background:var(--yellow);color:var(--on-yellow);border-color:var(--yellow-d)}
+.looks{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}.lookc{background:var(--tile);border-radius:24px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.swr{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}.swr small{width:100%;text-align:center;color:var(--ink2);font-weight:700}
+.sw{width:46px;height:46px;border-radius:50%;border:3px solid var(--card);box-shadow:0 0 0 2px var(--line);display:inline-block}button.sw.sel{box-shadow:0 0 0 4px var(--purple)}
+/* play */
+.pbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:4px 0 12px}
+.pips{display:flex;gap:6px;flex:1;min-width:120px;flex-wrap:wrap}.pips i{flex:1;min-width:14px;max-width:44px;height:14px;border-radius:99px;background:var(--line)}.pips i.ok{background:var(--mint-d)}.pips i.no{background:var(--yellow)}.pips i.cur{background:var(--purple)}
+.qcard{background:var(--card);border-radius:30px;padding:18px;box-shadow:0 8px 24px var(--shadow);display:flex;flex-direction:column;gap:16px}
+.qmeta{display:flex;gap:6px;flex-wrap:wrap}
+.qhead{display:flex;gap:12px;align-items:flex-start}.qtext{flex:1;min-width:0}.ib.spk{background:var(--yellow);box-shadow:0 4px 0 var(--yellow-d)}
+.qp{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,4.2vw,2rem);line-height:1.2;text-wrap:balance}
+.qh{font-family:var(--display);font-size:1.2rem;color:var(--ink2);margin-top:4px}
+.stim{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;background:var(--tile);border-radius:22px;padding:14px}
+.how{text-align:center;color:var(--ink2);font-size:.95rem}
+.qact{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.fbx{border-radius:20px;padding:12px 16px;display:flex;flex-direction:column;gap:2px;animation:pop .3s}
+.fbx b{font-family:var(--display);font-size:1.35rem}.fbx.good{background:var(--good-bg);color:var(--good)}.fbx.oops{background:var(--oops-bg);color:var(--oops)}.fbx.info{background:var(--info-bg);color:var(--ink)}.fbx span{color:var(--ink)}
+/* content bits */
+.em{display:inline-block;font-size:2.6rem;line-height:1.15;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.tx{font-family:var(--body);font-weight:700;font-size:2.2rem;line-height:1.1}.tx.word{font-size:1.5rem}
+.pw{display:inline-flex;flex-direction:column;align-items:center;gap:2px}.pw small{font-size:1.05rem;font-weight:700}
+.pair{display:inline-flex;gap:12px;align-items:center}
+.seq{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.tile{min-width:58px;min-height:64px;padding:4px 10px;border-radius:16px;background:var(--card);border:3px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:2rem;line-height:1}
+.tile .em{font-size:2rem}.tile.q,.tile.slot{border-style:dashed;border-color:var(--purple);color:var(--purple);background:var(--sel)}.tile.slot.filled{border-style:solid}.tile.slot.good{border-color:var(--good);background:var(--good-bg);color:var(--ink)}
+.grp{display:inline-grid;grid-template-columns:repeat(var(--c),auto);gap:4px;justify-content:center}.grp .em{font-size:1.75rem;position:relative}
+.grp.tap .em{cursor:pointer;border-radius:10px;padding:2px}.grp.tap .em[data-n]{background:var(--sel)}.grp.tap .em[data-n]::after{content:attr(data-n);position:absolute;right:-4px;bottom:-4px;font:800 .8rem var(--display);background:var(--purple);color:var(--on-purple);border-radius:99px;min-width:20px;height:20px;display:grid;place-items:center}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:center}.row.end{align-items:flex-end}.vs{font-weight:700;color:var(--ink2)}
+.listen{min-height:56px;padding:8px 18px;border-radius:99px;border:0;background:var(--yellow);color:var(--on-yellow);box-shadow:0 4px 0 var(--yellow-d);font-weight:700;font-size:1.2rem}
+.dotl{color:var(--purple)}.dsvg{color:var(--ink)}.shp{display:block}
+.pole{display:inline-flex;flex-direction:column;align-items:center}.pole .em{font-size:2rem;margin-bottom:-6px}.pole i{width:9px;border-radius:5px}
+.scale{display:inline-flex;flex-direction:column;align-items:center;padding-top:26px}.beam{width:210px;height:8px;border-radius:4px;background:var(--ink2);display:flex;justify-content:space-between;rotate:calc(var(--t)*9deg)}
+.pan{width:64px;height:64px;margin-top:-58px;display:grid;place-items:end center;rotate:calc(var(--t)*-9deg);border-bottom:5px solid var(--ink2);border-radius:0 0 14px 14px}.pan .em{font-size:2.2rem}.post{width:10px;height:54px;background:var(--ink2);border-radius:0 0 6px 6px}
+.glass{display:inline-block;width:44px;height:58px;border:4px solid var(--ink2);border-top:0;border-radius:4px 4px 12px 12px;background:transparent}.glass.full{background:linear-gradient(var(--blue),var(--blue)) bottom/100% 86% no-repeat}
+.nf{font-size:2rem;display:inline-flex;align-items:center}.nf i{width:56px;border-top:4px dotted var(--ink2);margin:0 4px}
+.graph{display:flex;flex-direction:column;gap:5px}.grow{display:flex;gap:4px;align-items:center}.grow b{width:44px;font-size:1.7rem;border-right:4px solid var(--ink2);margin-right:4px}.gc{width:38px;height:38px;border-radius:8px;background:var(--card);border:2px solid var(--line);font-size:1.4rem;display:grid;place-items:center}
+.key{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.key span{background:var(--card);border:3px solid var(--line);border-radius:16px;padding:4px 14px;font-size:1.7rem;font-weight:700}
+.cgrid{display:inline-grid;gap:4px;padding:6px;border-radius:12px;background:var(--ink2)}.cgrid i{display:grid;place-items:center;border-radius:6px;background:var(--card);font-style:normal;font-weight:800;color:var(--purple)}
+.sw[role=img]{width:54px;height:54px;border-radius:14px}
+.hopb{display:flex;flex-direction:column;gap:5px;align-items:center}.hopb div{display:flex;gap:5px}.hopt{min-width:52px;height:46px;border-radius:10px;background:var(--card);border:3px solid var(--line);display:grid;place-items:center;font-weight:700;font-size:1.3rem}.hopt.q{border-style:dashed;border-color:var(--purple);color:var(--purple);background:var(--sel)}
+/* widgets */
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:14px}
+.opts.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.opt{min-height:88px;min-width:0;padding:10px;border-radius:22px;border:3px solid var(--line);background:var(--tile);box-shadow:0 5px 0 var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink);user-select:none;-webkit-user-select:none}
+.opt.drag,.pcol.drag{touch-action:none}.opt.dragging,.pcol.dragging{z-index:30;position:relative;box-shadow:0 14px 24px var(--shadow);cursor:grabbing}
+.opt.sel{border-color:var(--purple);background:var(--sel);box-shadow:0 5px 0 var(--purple-d)}
+.opt.good{border-color:var(--good);background:var(--good-bg);box-shadow:0 5px 0 var(--good)}
+.opt.bad{opacity:.38;border-style:dashed;box-shadow:none}.opt.fix{border-color:var(--yellow-d)}
+.opt.mini{min-height:56px;min-width:56px;padding:4px;border-radius:16px}.opt.mini .em{font-size:1.8rem}
+.lock .opt,.lock .gcell,.lock .pcol,.lock .dot{pointer-events:none}
+.opts.end .opt,.w-order.end .opt{align-items:flex-end}
+.opts.line{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;border-top:6px solid var(--ink2);padding-top:14px;margin-top:8px}.opts.line .opt{min-height:64px;padding:4px}.opts.line .tx{font-size:1.6rem}
+.opts.hop{display:flex;flex-direction:column;align-items:center;gap:6px}.hrow{display:flex;gap:6px}.opt.hopt{min-height:56px;min-width:76px;height:auto;padding:4px;border-radius:14px}.opt.hopt .tx{font-size:1.6rem}.opt.hopt.on{background:var(--mint);border-color:var(--mint-d);color:var(--on-mint)}
+.slots{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:flex-end}.slotw{display:flex;flex-direction:column;align-items:center;gap:2px}.slotw small{color:var(--ink2);font-weight:700;min-height:1.2em}
+.oslot{min-width:92px;min-height:98px;border-radius:22px;border:3px dashed var(--purple);background:var(--sel);display:flex;align-items:flex-end;justify-content:center;padding:4px}.oslot .opt{min-height:82px;width:100%;box-shadow:none}.oslot.good{border-color:var(--good);border-style:solid}.oslot.fix{border-color:var(--yellow-d);border-style:solid}
+.tray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:flex-end;min-height:100px;padding:10px;border-radius:22px;background:var(--tile);margin-top:12px}.tray .opt{background:var(--card)}
+.bins{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}.bin{border-radius:22px;border:3px dashed var(--line);background:var(--tile);min-height:150px;display:flex;flex-direction:column;cursor:pointer}.picking .bin{border-color:var(--purple);background:var(--sel)}
+.binl{background:var(--purple);color:var(--on-purple);border-radius:18px 18px 0 0;padding:6px;text-align:center}.binl .tx{font-size:1.6rem}.binl .tx.word{font-size:1.05rem;overflow-wrap:anywhere}.w-order .opt{min-width:78px}.intro .qp{font-size:clamp(1.2rem,3.2vw,1.45rem);font-weight:500}.binl .em{font-size:1.9rem}.binl .pw small{font-size:.95rem}
+.bini{display:flex;flex-wrap:wrap;gap:6px;padding:8px;justify-content:center;flex:1;align-content:flex-start}.bini .opt,.w-sort .tray .opt{min-height:66px;min-width:66px;padding:6px;border-radius:16px;box-shadow:0 3px 0 var(--line)}.w-sort .em{font-size:2rem}.w-sort .tx{font-size:1.8rem}
+.w-match{position:relative;display:flex;justify-content:space-between;gap:clamp(40px,14vw,150px)}.mcol{display:flex;flex-direction:column;gap:12px;flex:1;min-width:0;position:relative;z-index:1}.w-match .opt{min-height:76px}.w-match .em{font-size:2.1rem}.w-match .grp .em{font-size:1.3rem}.mlines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.w-collect{display:grid;grid-template-columns:1fr 1fr;gap:12px}.w-collect .tray{margin:0;align-content:flex-start}.basket{border:3px dashed var(--purple);background:var(--sel);border-radius:22px;min-height:180px;display:flex;flex-direction:column;justify-content:space-between}.bkl{text-align:center;font-size:2.4rem}
+.w-grid{display:flex;flex-direction:column;align-items:center;gap:14px}.grow2{display:flex;gap:22px;flex-wrap:wrap;justify-content:center}.gbox{display:flex;flex-direction:column;align-items:center;gap:6px}.gbox small{font-weight:700;color:var(--ink2)}
+.cgrid.work{padding:6px}.gcell{width:46px;height:46px;border-radius:6px;border:0;background:var(--card);padding:0}.gcell.fix{outline:3px solid var(--yellow)}
+.pal{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}.pcol{width:60px;height:60px;border-radius:50%;border:4px solid var(--card);box-shadow:0 0 0 3px var(--line)}.pcol.sel{box-shadow:0 0 0 5px var(--ink)}
+.w-trace{display:flex;flex-direction:column;align-items:center;gap:10px}.tcv{width:min(300px,100%);aspect-ratio:1;border-radius:26px;background:var(--tile);border:3px solid var(--line);touch-action:none;cursor:crosshair}
+.w-seq{display:flex;flex-direction:column;align-items:center;gap:10px}.dboard{position:relative;width:min(340px,100%);aspect-ratio:1;border-radius:26px;background:var(--tile);border:3px solid var(--line)}.dlines{position:absolute;inset:0;width:100%;height:100%}
+.dot{position:absolute;width:42px;height:42px;margin:-21px 0 0 -21px;border-radius:50%;border:3px solid var(--blue-d);background:var(--card);color:var(--ink);font-weight:800;font-size:1.05rem;padding:0;font-variant-numeric:tabular-nums}.dot.on{background:var(--blue);color:var(--on-blue)}
+.hboard{display:flex;flex-direction:column;gap:6px;align-items:center}
+.reveal{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:1.3rem}
+.shake{animation:shake .35s}@keyframes shake{25%{translate:-7px 0}75%{translate:7px 0}}
+.pop{animation:pop .5s}@keyframes pop{0%{scale:.3;opacity:0}70%{scale:1.15}100%{scale:1;opacity:1}}
+/* results, mock, parent */
+.res{text-align:center;align-items:center}.bigem{font-size:4.5rem;line-height:1}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;width:100%}.stats div{background:var(--tile);border-radius:20px;padding:12px;display:flex;flex-direction:column;align-items:center}.stats b{font-family:var(--display);font-size:1.9rem;font-variant-numeric:tabular-nums}.stats small{color:var(--ink2)}
+.rl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}.par .rl,.two .rl{justify-content:flex-start}
+.mnav{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:12px}.mn{width:44px;height:44px;border-radius:12px;border:3px solid var(--line);background:var(--card);font-weight:800;font-variant-numeric:tabular-nums;padding:0}.mn.ans{background:var(--sel);border-color:var(--purple)}.mn.cur{outline:4px solid var(--yellow)}.mn.ok{background:var(--good-bg);border-color:var(--good)}.mn.no{background:var(--oops-bg);border-color:var(--oops)}.mn.skip{border-style:dashed}
+.gate{align-items:center;text-align:center}.gq{font-family:var(--display);font-size:2.2rem;font-weight:800}.gv{display:inline-block;min-width:70px;border-bottom:4px solid var(--purple)}
+.keys{display:grid;grid-template-columns:repeat(3,64px);gap:10px}.key{height:60px;border-radius:16px;border:3px solid var(--line);background:var(--tile);font-weight:800;font-size:1.3rem}
+.note{background:var(--info-bg);border-radius:16px;padding:10px 14px;font-size:.95rem}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.tscroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.95rem}th,td{text-align:left;padding:8px 10px;border-bottom:2px solid var(--tile);white-space:nowrap}th{color:var(--ink2);font-size:.8rem;letter-spacing:.06em;text-transform:uppercase}.num{font-variant-numeric:tabular-nums}tr.sh td{font-family:var(--display);font-weight:800;color:var(--purple);background:var(--tile)}
+.abar{display:inline-block;width:90px;height:10px;border-radius:99px;background:var(--tile);vertical-align:middle;overflow:hidden}.abar i{display:block;height:100%;background:var(--mint-d)}
+.sets{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}.sets label{display:flex;flex-direction:column;gap:4px;font-weight:700;font-size:.95rem}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}#fx i{position:absolute;top:30%;width:12px;height:16px;border-radius:3px;animation:conf 1.7s ease-out forwards}
+@keyframes conf{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--dx),60vh) rotate(var(--r));opacity:0}}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));translate:-50% 30px;background:var(--ink);color:var(--sky);padding:12px 20px;border-radius:99px;font-weight:700;opacity:0;transition:.25s;z-index:60;max-width:calc(100% - 32px);text-align:center;pointer-events:none}#toast.on{opacity:1;translate:-50% 0}
+@media (max-width:520px){body{font-size:17px}.brand{font-size:1.05rem}.ib{width:50px;height:50px}.em{font-size:2.2rem}.tx{font-size:1.9rem}.opts{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.opts.line{grid-template-columns:repeat(5,minmax(0,1fr))}.qcard{padding:14px}.oslot{min-width:74px}.w-collect{grid-template-columns:1fr}.opt.hopt{min-width:64px}.beam{width:170px}.gc{width:30px;height:30px;font-size:1.1rem}.btn.big{width:100%}.pair{gap:6px}.pair .em{font-size:1.7rem}.pw small{font-size:.95rem}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<div id="app">
+ <header class="top"><button class="ib" data-act="home" aria-label="Home">🏠</button><div class="brand">Magical Olympiad World</div><div class="topr"><span class="starc" id="starc">⭐ 0</span><button class="ib" data-act="sound" id="sndb" aria-label="Sound on or off">🔊</button><button class="ib" data-act="parent" aria-label="Parent area">👪</button></div></header>
+ <main id="view"></main>
+</div>
+<div id="fx" aria-hidden="true"></div><div id="toast" role="status"></div>
+<script>
+'use strict';
+/* ===== Question bank: data tables + seeded template generators ===== */
+const ABC='abcdefghijklmnopqrstuvwxyz',UP=ABC.toUpperCase(),VOW='aeiou';
+function RNG(seed){let s=(Math.imul((seed>>>0)^0x9E3779B9,0x85EBCA6B)>>>0)||1;const f=()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296};
+ f.int=(a,b)=>a+Math.floor(f()*(b-a+1));f.pick=a=>a[Math.floor(f()*a.length)];
+ f.shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(f()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+ f.sample=(a,n)=>f.shuffle(a).slice(0,n);return f}
+
+const WORDS={};
+('apple 🍎|ant 🐜|ball ⚽|banana 🍌|bus 🚌|bed 🛏️|book 📕|cat 🐱|car 🚗|cow 🐄|cup ☕|cake 🎂|dog 🐶|duck 🦆|door 🚪|egg 🥚|elephant 🐘|fish 🐟|fox 🦊|goat 🐐|hat 🎩|hen 🐔|house 🏠|juice 🧃|kite 🪁|key 🔑|lion 🦁|leaf 🍃|lemon 🍋|moon 🌙|monkey 🐒|mango 🥭|nose 👃|pen 🖊️|pig 🐷|parrot 🦜|rabbit 🐰|rose 🌹|ring 💍|sun ☀️|sock 🧦|tiger 🐯|tomato 🍅|van 🚐|violin 🎻|watch ⌚|web 🕸️|yo-yo 🪀|zebra 🦓|umbrella ☂️|octopus 🐙|orange 🍊|grapes 🍇|pencil ✏️|bat 🦇|rat 🐀|ten 🔟|frog 🐸|lake 🏞️|snake 🐍|star ⭐|bee 🐝|tree 🌳|king 🤴|box 📦|clock 🕐|lock 🔒|boat ⛵|coat 🧥|mouse 🐭|spoon 🥄|balloon 🎈|train 🚆|rain 🌧️|chain ⛓️|bell 🔔|shell 🐚|pan 🍳|man 👨|dish 🍽️|light 💡|night 🌃|run 🏃|cloud ☁️|clown 🤡|flower 🌸|flag 🚩|glass 🥛|globe 🌍|glove 🧤|plant 🌱|plane ✈️|bread 🍞|brush 🖌️|bridge 🌉|crab 🦀|crown 👑|crayon 🖍️|drum 🥁|dress 👗|dragon 🐉|frame 🖼️|green 🟢|present 🎁|pretzel 🥨|truck 🚚|skate ⛸️|ski 🎿|sleep 😴|smile 😊|snail 🐌|snow ❄️|spider 🕷️|stop 🛑|swan 🦢|swim 🏊|sweet 🍬|black ⚫|blue 🔵|map 🗺️|bag 👜|leg 🦵|net 🥅|pin 📌|lip 👄|pot 🍲|nut 🥜|bug 🐛|tub 🛁')
+ .split('|').forEach(s=>{const[w,e]=s.split(' ');WORDS[w]=e});
+const BS='ball banana bus bed book cat car cow cup cake dog duck door fish fox goat hat hen house juice kite key lion leaf lemon moon monkey mango nose pen pig parrot rabbit rose ring sun sock tiger tomato van violin watch web yo-yo zebra apple egg umbrella octopus ant elephant'.split(' ');
+const CVC='cat hat bat rat van pan map bag pen hen bed web ten leg net pig pin lip dog fox box pot sun bus cup nut bug tub'.split(' ');
+const RHY=['cat hat bat rat','hen pen ten','dog frog','cake lake snake','car star','bee tree','ring king','fox box','clock sock lock','goat boat coat','house mouse','moon spoon balloon','train rain chain','bell shell','van pan man','fish dish','light night','sun run'].map(s=>s.split(' '));
+const BL={bl:'black blue',cl:'clock cloud clown',fl:'flower flag',gl:'glass globe glove',pl:'plant plane',br:'bread brush bridge',cr:'crab crown crayon',dr:'drum dress dragon',fr:'frog frame',gr:'grapes green',pr:'present pretzel',tr:'train tree truck',sk:'skate ski',sl:'sleep',sm:'smile',sn:'snake snail snow',sp:'spoon spider',st:'star stop',sw:'swan swim sweet'};
+Object.keys(BL).forEach(k=>BL[k]=BL[k].split(' '));
+const BX={clock:'bl fl st sm fr cr',cloud:'pr',clown:'br cr dr fr gr',flower:'gl pl',flag:'br cr dr sn st sw sl',glass:'cl gr br',globe:'pr',glove:'cl gr pr tr st dr',plant:'sl gr',plane:'cr',bread:'tr dr',brush:'cr bl fl pl',bridge:'fr',crab:'gr dr sl st',crown:'br dr fr gr cl',drum:'pl gl sl',dress:'pr cr tr bl',frog:'sm cl fl bl sl gr',frame:'fl bl',grapes:'dr cr',green:'pr',train:'br dr gr pl st sl sp',tree:'fr fl gl',truck:'cl pl st',skate:'pl sl st gr cr',ski:'sl sp st sk',sleep:'st sw bl cr',smile:'st',snake:'st fl br dr sl',snail:'fl fr tr gr',snow:'bl fl gl gr cr sl st pl br pr',spoon:'sw',spider:'sl gl',star:'sp',stop:'sl dr cr pr fl pl',swan:'cl pl sp br fl',swim:'sl sk br tr pr gr',sweet:'sl fl gr',black:'sl st cr tr sm cl fl',blue:'cl gl fl tr'};
+const W3=new Set('bad bag bat bed beg bet bid big bin bit bog box bud bug bun bus but cab can cap car cat cob cod cog cop cot cow cub cud cup cut dab dad dam den dew did dig dim din dip dog dot dub dud dug dun fad fan far fat fax fed fen few fig fin fit fix fog for fox fun fur gab gag gap gas gel gem get gig gin god got gum gun gut had hag ham has hat hem hen her hex hid him hip his hit hog hop hot how hub hug hum hut jab jag jam jar jaw jet jig job jog jot joy jug jut keg kid kin kit lab lad lag lap law lax lay led leg let lid lip lit log lot low lug mad man map mat max may men met mid mix mob mom mop mud mug mum nab nag nap net new nib nip nod nor not now nun nut pad pal pan par pat paw pay peg pen pet pig pin pit pod pop pot pox pub pug pun pup pus put rag ram ran rap rat raw ray red rib rid rig rim rip rob rod rot row rub rug rum run rut sad sag sap sat saw sax say set sew sex sin sip sir sit six sob sod son sop sow sub sum sun sup tab tag tan tap tar tat tax ten tin tip tom ton top tot tow tub tug tun tux van vat vet vex vow wag war was wax way web wed wet wig win wit won wow yak yam yap yaw yes yet zap zen zip zoo bay bow boy buy cry day ear eat egg elf end eye fly fry guy hay hey ice ill ink key lie oak oat odd off oil old one our out owl own pea pie sea see she shy sky spy tea the tie toe toy try two use you lop tad cad bib bob bop bap dip dop hep bot bum pep pip pap tab tub web wab bis'.split(' '));
+const CATS={fruit:['fruits','apple 🍎|banana 🍌|mango 🥭|orange 🍊|grapes 🍇|lemon 🍋|strawberry 🍓|watermelon 🍉|pineapple 🍍'],animal:['animals','cat 🐱|dog 🐶|cow 🐄|lion 🦁|tiger 🐯|monkey 🐒|rabbit 🐰|elephant 🐘|zebra 🦓|goat 🐐|pig 🐷'],vehicle:['things we ride in','car 🚗|bus 🚌|van 🚐|train 🚆|aeroplane ✈️|cycle 🚲|ship 🚢|helicopter 🚁'],bird:['birds','duck 🦆|hen 🐔|parrot 🦜|owl 🦉|peacock 🦚|penguin 🐧'],veg:['vegetables','carrot 🥕|potato 🥔|corn 🌽|brinjal 🍆|broccoli 🥦|onion 🧅'],clothes:['things we wear','sock 🧦|hat 🎩|shirt 👕|frock 👗|gloves 🧤|shoe 👟'],flower:['flowers','rose 🌹|sunflower 🌻|tulip 🌷|lotus 🪷|hibiscus 🌺'],sea:['water animals','fish 🐟|octopus 🐙|whale 🐳|crab 🦀|dolphin 🐬'],school:['school things','pencil ✏️|pen 🖊️|book 📕|crayon 🖍️|schoolbag 🎒|ruler 📏|scissors ✂️']};
+Object.values(CATS).forEach(c=>c[1]=c[1].split('|').map(s=>s.split(' ')));
+const CATBAD={animal:['bird','sea'],bird:['animal','sea'],sea:['animal','bird'],clothes:['school']};
+const OPP=[['big','<span class="em" style="font-size:3.4rem">🐘</span>','small','<span class="em" style="font-size:1.3rem">🐘</span>'],['tall','<span class="em" style="font-size:3.4rem">🌴</span>','short','<span class="em" style="font-size:1.5rem">🌱</span>'],['hot','<span class="em">🔥</span>','cold','<span class="em">❄️</span>'],['up','<span class="em">⬆️</span>','down','<span class="em">⬇️</span>'],['in','<span class="em">📥</span>','out','<span class="em">📤</span>'],['open','<span class="em">🔓</span>','closed','<span class="em">🔒</span>'],['happy','<span class="em">😀</span>','sad','<span class="em">😢</span>'],['fast','<span class="em">🚀</span>','slow','<span class="em">🐢</span>'],['day','<span class="em">☀️</span>','night','<span class="em">🌙</span>'],['full','<span class="glass full"></span>','empty','<span class="glass"></span>'],['wet','<span class="em">🌧️</span>','dry','<span class="em">🏜️</span>'],['near','<span class="nf">🧒🏠</span>','far','<span class="nf far">🧒<i></i>🏠</span>']];
+const CLUES=[['We write with it.','हम इससे लिखते हैं।','pencil','✏️'],['It tells us the time.','यह हमें समय बताती है।','clock','⏰'],['We wear it on our foot.','हम इसे पैर में पहनते हैं।','shoe','👟'],['It gives us milk.','यह हमें दूध देती है।','cow','🐄'],['It flies high in the sky and carries people.','यह आसमान में उड़ता है और लोगों को ले जाता है।','aeroplane','✈️'],['We sleep on it at night.','हम रात को इस पर सोते हैं।','bed','🛏️'],['We read stories in it.','हम इसमें कहानियाँ पढ़ते हैं।','book','📕'],['It shines in the sky in the daytime.','यह दिन में आसमान में चमकता है।','sun','☀️'],['We use it to eat soup.','हम इससे सूप पीते हैं।','spoon','🥄'],['It opens a lock.','यह ताला खोलती है।','key','🔑'],['We hold it over our head when it rains.','बारिश में हम इसे सिर के ऊपर पकड़ते हैं।','umbrella','☂️'],['It lives in water and swims.','यह पानी में रहती है और तैरती है।','fish','🐟'],['We cut paper with it.','हम इससे कागज़ काटते हैं।','scissors','✂️'],['We brush our teeth with it.','हम इससे दाँत साफ़ करते हैं।','toothbrush','🪥'],['We talk to people far away with it.','हम इससे दूर के लोगों से बात करते हैं।','phone','📱'],['We kick it when we play.','खेलते समय हम इसे पैर से मारते हैं।','ball','⚽']];
+const NEUTRAL=['🍌','🚗','🌳','🏠','🐘','🎩','🌹','🥁','🦁','🍅'];
+const STORY=[[['🌰','🌱','🌷'],'A seed grows into a small plant, then a flower.'],[['🥚','🐣','🐔'],'An egg hatches into a chick, then it grows into a hen.'],[['🥚','🐛','🦋'],'An egg becomes a caterpillar, then a butterfly.'],[['👶','🧒','👨'],'A baby grows into a child, then a grown-up.'],[['🌅','☀️','🌙'],'Morning comes first, then the bright day, then night.'],[['☁️','🌧️','🌈'],'First clouds, then rain, then a rainbow.'],[['🛏️','🪥','🎒'],'We wake up, brush our teeth, then go to school.'],[['🥣','🎂','🍰'],'We mix, bake the cake, then eat a slice.'],[['🌱','🌿','🌳'],'A tiny plant grows bigger and becomes a tree.'],[['🧊','💧','☁️'],'Ice melts to water, and water rises up as cloud.']];
+const STORY4=[[['🌰','🌱','🌿','🌳'],'Seed, sprout, plant, tree.'],[['🥚','🐣','🐥','🐔'],'Egg, hatching chick, chick, hen.'],[['👶','🧒','👨','👴'],'Baby, child, grown-up, grandfather.'],[['🌅','☀️','🌇','🌙'],'Morning, noon, evening, night.'],[['🌑','🌒','🌓','🌕'],'The moon grows from dark to full.']];
+const OBJ=[['apple','apples','🍎'],['star','stars','⭐'],['ball','balls','⚽'],['butterfly','butterflies','🦋'],['fish','fish','🐟'],['flower','flowers','🌸'],['balloon','balloons','🎈'],['car','cars','🚗'],['duck','ducks','🦆'],['banana','bananas','🍌'],['heart','hearts','❤️'],['bee','bees','🐝']];
+const N1=['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'],N10=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+const nname=n=>n<20?N1[n]:n==100?'one hundred':N10[Math.floor(n/10)]+(n%10?'-'+N1[n%10]:'');
+const COLS=[['red','#F0524F'],['yellow','#FFC93C'],['blue','#2F7BF5'],['green','#2FBF71'],['purple','#8B5CF6'],['orange','#FF8A3D']];
+const SHN=['circle','square','triangle','rectangle','oval','star','heart','diamond'];
+const SHX={circle:['oval'],oval:['circle'],square:['rectangle','diamond'],rectangle:['square'],diamond:['square'],triangle:[],star:[],heart:[]};
+const SOBJ=[['ball','⚽','circle'],['clock','🕐','circle'],['orange','🍊','circle'],['pizza slice','🍕','triangle'],['warning sign','⚠️','triangle'],['door','🚪','rectangle'],['book','📕','rectangle'],['phone','📱','rectangle'],['egg','🥚','oval'],['kite','🪁','diamond']];
+const WT=[['leaf 🍃','balloon 🎈','pencil ✏️','butterfly 🦋','key 🔑'],['apple 🍎','book 📕','shoe 👟','ball ⚽'],['schoolbag 🎒','watermelon 🍉','chair 🪑','dog 🐶'],['elephant 🐘','car 🚗','bus 🚌','cow 🐄']].map(t=>t.map(s=>s.split(' ')));
+const POLE=[['flower','🌸','#2FBF71'],['flag','🚩','#9A6B3F'],['balloon','🎈','#9AA3C7'],['lollipop','🍭','#C98BB0'],['sunflower','🌻','#2FBF71']];
+const SND={a:'a, as in apple',b:'buh',c:'kuh',d:'duh',e:'e, as in egg',f:'fff',g:'guh',h:'huh',j:'juh',k:'kuh',l:'lll',m:'mmm',n:'nnn',o:'o, as in octopus',p:'puh',r:'rrr',s:'sss',t:'tuh',u:'u, as in umbrella',v:'vvv',w:'wuh',x:'ks',y:'yuh',z:'zzz',i:'i, as in ink',q:'kwuh'};
+const DOTS=[['triangle','🔺',[[50,12],[88,85],[12,85]],1],['square','🟦',[[20,20],[80,20],[80,80],[20,80]],1],['diamond','🔷',[[50,8],[88,50],[50,92],[12,50]],1],['star','⭐',[[50,8],[75,88],[10,38],[90,38],[25,88]],1],['house','🏠',[[50,10],[88,42],[88,90],[12,90],[12,42]],2],['crown','👑',[[10,30],[30,55],[50,20],[70,55],[90,30],[82,85],[18,85]],2],['arrow','➡️',[[10,40],[55,40],[55,18],[92,50],[55,82],[55,60],[10,60]],2],['boat','⛵',[[8,58],[44,58],[44,10],[80,58],[92,58],[78,88],[22,88]],2],['fish','🐟',[[8,50],[35,24],[62,34],[92,14],[84,50],[92,86],[62,66],[35,76]],3],['heart','❤️',[[50,30],[62,14],[80,12],[93,28],[88,52],[50,90],[12,52],[7,28],[20,12],[38,14]],3],['tree','🌲',[[50,6],[76,36],[60,36],[88,66],[58,66],[58,92],[42,92],[42,66],[12,66],[40,36],[24,36]],3]];
+
+/* ---- html builders ---- */
+const E=(e,c)=>`<span class="em${c?' '+c:''}">${e}</span>`;
+const T=(s,c)=>`<span class="tx${c?' '+c:''}">${s}</span>`;
+const Wd=w=>T(w,'word');
+const PW=w=>`<span class="pw"><span class="em">${WORDS[w]}</span><small>${w}</small></span>`;
+const PN=(n,e)=>`<span class="pw"><span class="em">${e}</span><small>${n}</small></span>`;
+const seq=a=>`<div class="seq">${a.map(x=>`<span class="tile${x==='?'?' q':''}">${x}</span>`).join('')}</div>`;
+const grp=(e,n,tap)=>`<span class="grp${tap?' tap':''}" style="--c:${Math.min(n,5)}">${Array.from({length:n},()=>`<span class="em">${e}</span>`).join('')}</span>`;
+const LB=(say,cap)=>`<button type="button" class="listen" data-say="${say}">🔊 <span>${cap}</span></button>`;
+const dotL=(ch,s=76)=>`<svg class="dotl" viewBox="0 0 100 100" width="${s}" height="${s}" role="img" aria-label="dotted ${ch}"><text x="50" y="80" text-anchor="middle" font-size="84" font-weight="700" fill="none" stroke="currentColor" stroke-width="2.4" stroke-dasharray="1 5.5" stroke-linecap="round">${ch}</text></svg>`;
+function shp(k,c='#2F7BF5',s=64,o){const st=o?`fill="none" stroke="${c}" stroke-width="5" stroke-dasharray="7 6"`:`fill="${c}"`;const P={circle:`<circle cx="50" cy="50" r="42" ${st}/>`,square:`<rect x="12" y="12" width="76" height="76" rx="4" ${st}/>`,triangle:`<polygon points="50,10 92,88 8,88" ${st}/>`,rectangle:`<rect x="4" y="26" width="92" height="48" rx="4" ${st}/>`,oval:`<ellipse cx="50" cy="50" rx="46" ry="28" ${st}/>`,star:`<polygon points="50,6 61,38 95,38 67,58 78,91 50,71 22,91 33,58 5,38 39,38" ${st}/>`,heart:`<path d="M50 88 C10 58 4 34 18 20 C30 8 46 14 50 28 C54 14 70 8 82 20 C96 34 90 58 50 88Z" ${st}/>`,diamond:`<polygon points="50,6 86,50 50,94 14,50" ${st}/>`};return `<svg class="shp" viewBox="0 0 100 100" width="${s}" height="${s}" role="img" aria-label="${k}">${P[k]}</svg>`}
+const pole=(k,hg)=>`<span class="pole"><span class="em">${k[1]}</span><i style="height:${hg}px;background:${k[2]}"></i></span>`;
+const scale=(a,b,t)=>`<span class="scale" style="--t:${t}"><span class="beam"><span class="pan">${a}</span><span class="pan">${b}</span></span><span class="post"></span></span>`;
+const sz=(e,k)=>`<span class="em" style="font-size:${k}rem">${e}</span>`,SZ=[1.3,2,2.8,3.7,4.7];
+const graph=rows=>`<div class="graph">${rows.map(([e,n])=>`<div class="grow"><b>${e}</b>${Array.from({length:6},(_,i)=>`<span class="gc">${i<n?e:''}</span>`).join('')}</div>`).join('')}</div>`;
+const keyH=k=>`<div class="key">${k.map(([s,n])=>`<span>${s} = <b>${n}</b></span>`).join('')}</div>`;
+const gridH=(cells,cols,s=30)=>`<span class="cgrid" style="grid-template-columns:repeat(${cols},${s}px)">${cells.map(c=>`<i style="height:${s}px;${c?'background:'+c:''}">${c?'':'?'}</i>`).join('')}</span>`;
+function hopRows(n){const rows=[];let i=0,k=0;const pat=[1,1,2,1,2,1,2,1,2];while(i<n){const c=Math.min(pat[k++%pat.length],n-i);rows.push(Array.from({length:c},(_,j)=>i+j));i+=c}return rows.reverse()}
+const hopB=(labels,blank)=>`<div class="hopb">${hopRows(labels.length).map(r=>`<div>${r.map(i=>`<span class="hopt${i==blank?' q':''}">${i==blank?'?':labels[i]}</span>`).join('')}</div>`).join('')}</div>`;
+const dotsSvg=pts=>`<svg class="dsvg" viewBox="0 0 100 100" width="150" height="150" role="img" aria-label="numbered dots">${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="currentColor"/><text x="${p[0]}" y="${p[1]-7}" font-size="11" font-weight="700" text-anchor="middle" fill="currentColor">${i+1}</text>`).join('')}</svg>`;
+
+/* ---- question builders ---- */
+function mc(r,p,h,ok,bad,x){const opts=r.shuffle([ok,...bad]);return Object.assign({t:'mcq',p,h,opts,a:opts.indexOf(ok)},x)}
+function mcN(p,h,opts,a,x){return Object.assign({t:'mcq',p,h,opts,a},x)}
+function fl(r,p,h,parts,ok,bad,x){const opts=r.shuffle([ok,...bad]);return Object.assign({t:'fill',p,h,parts,opts,a:opts.indexOf(ok)},x)}
+function ord(r,p,h,items,x){let sh,n=0;do{sh=r.shuffle(items.map((_,i)=>i))}while(sh.every((v,i)=>items[v]===items[i])&&++n<30);return Object.assign({t:'order',p,h,items,sh},x)}
+function srt(r,p,h,bins,items,x){return Object.assign({t:'sort',p,h,bins,items:r.shuffle(items)},x)}
+function mat(r,p,h,pairs,x){let ro,n=0;do{ro=r.shuffle(pairs.map((_,i)=>i))}while(ro.every((v,i)=>v===i)&&++n<30);return Object.assign({t:'match',p,h,pairs,ro},x)}
+function near(r,n,lo,hi,ex=[],k=2){const c=[];for(let d=1;d<=6&&c.length<Math.max(4,k+1);d++)[n-d,n+d].forEach(v=>{if(v>=lo&&v<=hi&&!ex.includes(v))c.push(v)});return r.sample(c,k)}
+const nearL=(r,i,ex=[],k=2)=>near(r,i,0,25,ex,k);
+const sg=w=>w[0]=='k'?'c':w[0];
+const bsBy=l=>BS.filter(w=>w[0]==l);
+const famOf=w=>RHY.findIndex(f=>f.includes(w));
+const safeV=w=>[...VOW].filter(v=>v!=w[1]&&!W3.has(w[0]+v+w[2]));
+const TOPICS=[];const topic=o=>TOPICS.push(o);
+
+/* =================== ENGLISH =================== */
+topic({id:'alphabet',s:'en',name:'Alphabet',icon:'🔤',
+ it:'Every letter has a big form and a small form. Letters always stand in the same order: A, B, C, D…',ih:'हर अक्षर का एक बड़ा और एक छोटा रूप होता है। अक्षर हमेशा एक ही क्रम में आते हैं: A, B, C, D…',
+ ex:[seq(['A','a'])+'<p>Big A and small a are partners.</p>',seq(['A','B','C','D'])+'<p>After C comes D.</p>'],
+ gen(L,r){const v=r.int(0,3);
+  if(L==1){
+   if(v==0){const i=r.int(0,24);return mc(r,`Which letter comes after ${UP[i]}?`,`${UP[i]} के बाद कौन सा अक्षर आता है?`,T(UP[i+1]),nearL(r,i+1,[i]).map(x=>T(UP[x])),{stim:seq([UP[i],'?']),e:`${UP[i+1]} comes after ${UP[i]}.`,hint:'Say the ABC song slowly.'})}
+   if(v==1){const i=r.int(0,25);return mc(r,`Which small letter is the partner of big ${UP[i]}?`,`बड़े ${UP[i]} का छोटा अक्षर कौन सा है?`,T(ABC[i]),nearL(r,i).map(x=>T(ABC[x])),{stim:seq([UP[i]]),e:`Big ${UP[i]} and small ${ABC[i]} are partners.`})}
+   if(v==2){const i=r.int(0,25);return mc(r,'Tap the letter.','अक्षर को छुओ।',T(UP[i]),[T(r.int(2,9)),shp(r.pick(['star','circle','triangle']),'#FFC93C',56),E(r.pick(['🍎','🐶','🚗']))],{e:`${UP[i]} is a letter of the alphabet.`})}
+   const i=r.int(0,22),b=r.int(1,2),a=[0,1,2,3].map(k=>UP[i+k]);return fl(r,'Which letter is missing?','कौन सा अक्षर छूट गया है?',a.map((x,k)=>k==b?null:x),T(a[b]),nearL(r,i+b,[i,i+1,i+2,i+3]).map(x=>T(UP[x])),{e:`${a.join(', ')} — the missing letter is ${a[b]}.`})}
+  if(L==2){
+   if(v==0){const i=r.int(1,25);return mc(r,`Which letter comes before ${UP[i]}?`,`${UP[i]} से पहले कौन सा अक्षर आता है?`,T(UP[i-1]),nearL(r,i-1,[i]).map(x=>T(UP[x])),{stim:seq(['?',UP[i]]),e:`${UP[i-1]} comes before ${UP[i]}.`})}
+   if(v==1){const s=r.sample([...Array(26).keys()],4);return mat(r,'Match each big letter with its small letter.','हर बड़े अक्षर को उसके छोटे अक्षर से मिलाओ।',s.map(i=>[T(UP[i]),T(ABC[i])]),{e:'Each big letter has a small partner.'})}
+   if(v==2){const i=r.int(0,22),a=[0,1,2,3].map(k=>T(UP[i+k]));return ord(r,'Put the letters in ABC order.','अक्षरों को ABC के क्रम में लगाओ।',a,{e:`The order is ${UP.slice(i,i+4).split('').join(', ')}.`})}
+   const i=r.int(0,25);return mc(r,`Which big letter is the partner of small ${ABC[i]}?`,`छोटे ${ABC[i]} का बड़ा अक्षर कौन सा है?`,T(UP[i]),nearL(r,i).map(x=>T(UP[x])),{stim:seq([ABC[i]]),e:`Small ${ABC[i]} and big ${UP[i]} are partners.`})}
+  if(v==0){const i=r.int(0,23);return mc(r,`Which letter comes between ${UP[i]} and ${UP[i+2]}?`,`${UP[i]} और ${UP[i+2]} के बीच में कौन सा अक्षर आता है?`,T(UP[i+1]),nearL(r,i+1,[i,i+2]).map(x=>T(UP[x])),{stim:seq([UP[i],'?',UP[i+2]]),e:`${UP[i+1]} is between ${UP[i]} and ${UP[i+2]}.`})}
+  if(v==1){const s=r.sample([...Array(26).keys()],5).sort((a,b)=>a-b);return ord(r,'Put these letters in ABC order.','इन अक्षरों को ABC के क्रम में लगाओ।',s.map(i=>T(UP[i])),{e:`The order is ${s.map(i=>UP[i]).join(', ')}.`,hint:'Sing the ABC song. Which of these letters do you sing first?'})}
+  if(v==2){const s=r.pick(['bdpq','mnuw','ijlt','aeoc','fthk']);return mat(r,'Look carefully! Match each small letter with its big letter.','ध्यान से देखो! हर छोटे अक्षर को उसके बड़े अक्षर से मिलाओ।',[...s].map(c=>[T(c),T(c.toUpperCase())]),{e:'These small letters look alike, so look at each one carefully.'})}
+  const s=r.sample([...Array(26).keys()],3).sort((a,b)=>a-b);return mc(r,'Which of these letters comes first in ABC order?','इनमें से कौन सा अक्षर ABC में सबसे पहले आता है?',T(UP[s[0]]),[T(UP[s[1]]),T(UP[s[2]])],{e:`${UP[s[0]]} comes before ${UP[s[1]]} and ${UP[s[2]]}.`})}});
+
+topic({id:'tracing',s:'en',name:'Tracing',icon:'✍️',
+ it:'We write letters by following a path. Start at the green dot and move slowly over the dotted letter.',ih:'हम एक रास्ते पर चलकर अक्षर लिखते हैं। हरे बिंदु से शुरू करो और बिंदुओं वाले अक्षर पर धीरे-धीरे चलो।',
+ ex:[dotL('L',96)+'<p>Go down, then across. That makes L.</p>'],
+ gen(L,r){const v=r.int(0,9),ch=L==1?r.pick([...'LTIHEFAVXZNMKWY']):L==2?r.pick([...UP]):r.pick([...ABC]),i=ABC.indexOf(ch.toLowerCase()),f=L==3?ABC:UP,big=L==3?'small':'big';
+  if(v<7)return {t:'trace',glyph:ch,p:`Trace the ${big} letter ${ch}.`,h:`${L==3?'छोटा':'बड़ा'} अक्षर ${ch} बनाओ। बिंदुओं पर उंगली चलाओ।`,e:`You traced the letter ${ch}.`,hint:'Start at the green dot. Colour over the whole letter and stay inside it.'};
+  if(v<9)return mc(r,`Which dotted letter is ${ch}?`,`बिंदुओं वाला कौन सा अक्षर ${ch} है?`,dotL(ch),nearL(r,i).map(x=>dotL(f[x])),{e:`This dotted letter is ${ch}.`});
+  return mc(r,'Which letter do these dots make?','ये बिंदु कौन सा अक्षर बनाते हैं?',T(ch),nearL(r,i).map(x=>T(f[x])),{stim:dotL(ch,110),e:`The dots make the letter ${ch}.`})}});
+
+topic({id:'sequencing',s:'en',name:'Sequencing',icon:'🪜',
+ it:'Sequencing means putting things in the right order: what comes first, next and last.',ih:'क्रम लगाने का मतलब है चीज़ों को सही क्रम में रखना: पहले क्या, फिर क्या और आख़िर में क्या।',
+ ex:[seq(['🌰','🌱','🌷'])+'<p>First a seed, then a plant, then a flower.</p>'],
+ gen(L,r){const v=r.int(0,2),sd=(st,n,pool)=>r.sample([...new Set((pool||STORY).filter(x=>x!=st).flatMap(x=>x[0]))].filter(e=>!st[0].includes(e)),n).map(e=>E(e));
+  if(L==1){
+   if(v==0){const i=r.int(0,22),b=r.int(1,3),a=[0,1,2,3].map(k=>UP[i+k]);return fl(r,'Complete the sequence.','क्रम पूरा करो।',a.map((x,k)=>k==b?null:x),T(a[b]),nearL(r,i+b,[i,i+1,i+2,i+3]).map(x=>T(UP[x])),{e:`${a.join(', ')} is the right order.`})}
+   if(v==1){const st=r.pick(STORY);return mc(r,'What comes next?','इसके बाद क्या आएगा?',E(st[0][2]),sd(st,2),{stim:seq([st[0][0],st[0][1],'?']),e:st[1]})}
+   const i=r.int(0,23);return ord(r,'Put the letters in ABC order.','अक्षरों को ABC के क्रम में लगाओ।',[0,1,2].map(k=>T(UP[i+k])),{e:`The order is ${UP[i]}, ${UP[i+1]}, ${UP[i+2]}.`})}
+  if(L==2){
+   if(v==0){const st=r.pick(STORY);return ord(r,'Put the pictures in the right order.','चित्रों को सही क्रम में लगाओ।',st[0].map(x=>E(x)),{e:st[1],labels:['first','next','last'],hint:'Think: what happens first?'})}
+   if(v==1){const i=r.int(0,22),b=r.pick([0,3]),a=[0,1,2,3].map(k=>ABC[i+k]);return fl(r,'Complete the sequence.','क्रम पूरा करो।',a.map((x,k)=>k==b?null:x),T(a[b]),nearL(r,i+b,[i,i+1,i+2,i+3]).map(x=>T(ABC[x])),{e:`${a.join(', ')} is the right order.`})}
+   const st=r.pick(STORY);return mc(r,'What comes first?','सबसे पहले क्या आता है?',E(st[0][0]),sd(st,2),{stim:seq(['?',st[0][1],st[0][2]]),e:st[1]})}
+  if(v==0){const st=r.pick(STORY4);return ord(r,'Put the four pictures in the right order.','चारों चित्रों को सही क्रम में लगाओ।',st[0].map(x=>E(x)),{e:st[1],hint:'Find what comes first, then the very last one.'})}
+  if(v==1){const i=r.int(0,20),a=[0,1,2,3,4].map(k=>UP[i+k]),b=r.int(1,3);return fl(r,'Which letter is missing from this sequence?','इस क्रम में कौन सा अक्षर छूटा है?',a.map((x,k)=>k==b?null:x),T(a[b]),nearL(r,i+b,[i,i+1,i+2,i+3,i+4],3).map(x=>T(UP[x])),{e:`${a.join(', ')} is the right order.`})}
+  const st=r.pick(STORY4);return mc(r,'What comes next?','इसके बाद क्या आएगा?',E(st[0][3]),[...sd(st,2,STORY4),E(st[0][0])],{stim:seq([st[0][0],st[0][1],st[0][2],'?']),e:st[1]})}});
+
+topic({id:'beginsound',s:'en',name:'Beginning Sound',icon:'👂',
+ it:'Every word starts with a sound. Say the word slowly and listen to the very first sound.',ih:'हर शब्द एक आवाज़ से शुरू होता है। शब्द को धीरे बोलो और सबसे पहली आवाज़ सुनो।',
+ ex:[PW('ball')+'<p><b>b</b>all begins with the sound /b/.</p>'],
+ gen(L,r){const v=r.int(0,2),w=r.pick(BS),l=w[0],oth=n=>{const out=[],seen=[sg(w)];for(const x of r.shuffle(BS)){if(!seen.includes(sg(x))){seen.push(sg(x));out.push(x)}if(out.length==n)break}return out};
+  const badL=(n)=>r.sample([...ABC].filter(c=>c!=l&&!(sg(c)==sg(l))&&!'xqi'.includes(c)),n).map(c=>T(c));
+  if(L==1||(L==2&&v==0))return mc(r,`Which sound does "${w}" begin with?`,`"${w}" किस आवाज़ से शुरू होता है?`,T(l),badL(L==1?2:3),{stim:PW(w),say:w,e:`"${w}" begins with /${l}/.`,hint:`Say it slowly: ${w}. What do you hear first?`});
+  if(L==2&&v==1)return mc(r,`Which picture begins with the sound /${l}/?`,`कौन सा चित्र /${l}/ आवाज़ से शुरू होता है?`,PW(w),oth(2).map(PW),{stim:LB(SND[l],'/'+l+'/'),e:`"${w}" begins with /${l}/.`});
+  if(L==2){const ls=r.sample('bcdhlmprst'.split('').filter(c=>bsBy(c).length>=2),2);return srt(r,'Put each picture in the basket of its beginning sound.','हर चित्र को उसकी पहली आवाज़ वाली टोकरी में डालो।',ls.map(c=>T(c)),ls.flatMap((c,b)=>r.sample(bsBy(c),2).map(x=>({html:PW(x),b}))),{e:`Listen to the first sound of each word: /${ls[0]}/ or /${ls[1]}/.`})}
+  if(v==0){const c=r.pick('bcdhlmprst'.split('').filter(c=>bsBy(c).length>=2)),p=r.sample(bsBy(c),2),w2=p[1];const o=[];for(const x of r.shuffle(BS)){if(sg(x)!=sg(c)&&!o.some(y=>sg(y)==sg(x)))o.push(x);if(o.length==2)break}
+   return mc(r,`Which picture begins with the same sound as "${p[0]}"?`,`कौन सा चित्र "${p[0]}" जैसी आवाज़ से शुरू होता है?`,PW(w2),o.map(PW),{stim:PW(p[0]),say:p[0],e:`"${p[0]}" and "${w2}" both begin with /${c}/.`})}
+  if(v==1){const ws=[w,...oth(3)];return mat(r,'Match each picture with its beginning letter.','हर चित्र को उसके पहले अक्षर से मिलाओ।',ws.map(x=>[PW(x),T(x[0])]),{e:'Say each word and listen to its first sound.'})}
+  const c=r.pick('bcdhlmpr'.split('').filter(c=>bsBy(c).length>=3)),three=r.sample(bsBy(c),3),odd=r.pick(BS.filter(x=>sg(x)!=sg(c)));
+  return mc(r,'Three pictures begin with the same sound. Which one begins with a different sound?','तीन चित्र एक ही आवाज़ से शुरू होते हैं। कौन सा चित्र अलग आवाज़ से शुरू होता है?',PW(odd),three.map(PW),{e:`"${odd}" begins with /${odd[0]}/. The others begin with /${c}/.`})}});
+
+topic({id:'oddone',s:'en',name:'Odd One Out',icon:'🧐',
+ it:'Three things belong together. One thing is different. Find the one that does not belong.',ih:'तीन चीज़ें एक जैसी हैं। एक चीज़ अलग है। जो चीज़ बाकी से अलग है, उसे ढूँढो।',
+ ex:[seq(['🍎','🥭','🍌','🚗'])+'<p>The car is the odd one. The others are fruits.</p>'],
+ gen(L,r){const v=r.int(0,2),ks=Object.keys(CATS);
+  const cat=(pairs)=>{let a,b;do{a=r.pick(ks);b=r.pick(ks)}while(a==b||(CATBAD[a]||[]).includes(b)||(pairs&&!pairs.includes(a+b)));const three=r.sample(CATS[a][1],3),odd=r.pick(CATS[b][1]);
+   return mc(r,'Which one does not belong?','कौन सी चीज़ बाकी से अलग है?',PN(odd[0],odd[1]),three.map(x=>PN(x[0],x[1])),{e:`The ${odd[0]} is the odd one. The others are ${CATS[a][0]}.`,hint:'Three of them are the same kind of thing.'})};
+  if(L==1)return cat(['fruitvehicle','fruitanimal','animalvehicle','vehiclefruit','animalfruit','vehicleanimal','fruitclothes','animalclothes','birdvehicle','birdfruit','flowervehicle','schoolanimal','schoolfruit']);
+  if(L==2){if(v<2)return cat(['fruitveg','vegfruit','flowerfruit','fruitflower','clothesvehicle','schoolvehicle','vegflower','flowerveg','seafruit','birdflower','seavehicle','birdclothes']);
+   const c=r.pick('bcdhlmpr'.split('').filter(c=>bsBy(c).length>=3)),three=r.sample(bsBy(c),3),odd=r.pick(BS.filter(x=>sg(x)!=sg(c)));
+   return mc(r,'Three words begin with the same sound. Which one is different?','तीन शब्द एक ही आवाज़ से शुरू होते हैं। कौन सा अलग है?',PW(odd),three.map(PW),{e:`"${odd}" begins with /${odd[0]}/. The others begin with /${c}/.`})}
+  if(v==0){const vs=r.sample([...'AEIOU'],3),c=r.pick([...'BDGKMPRT']);const sw=r.int(0,1);return sw?mc(r,'Which letter is the odd one out?','कौन सा अक्षर बाकी से अलग है?',T(c),vs.map(x=>T(x)),{e:`${c} is a consonant. ${vs.join(', ')} are vowels.`,hint:'Think about vowels: A, E, I, O, U.'}):(()=>{const cs=r.sample([...'BDGKMPRT'],3),vv=r.pick([...'AEIOU']);return mc(r,'Which letter is the odd one out?','कौन सा अक्षर बाकी से अलग है?',T(vv),cs.map(x=>T(x)),{e:`${vv} is a vowel. ${cs.join(', ')} are consonants.`,hint:'Think about vowels: A, E, I, O, U.'})})()}
+  if(v==1){const f=r.pick(RHY.filter(f=>f.length>=3)),three=r.sample(f,3),odd=r.pick(RHY.filter(g=>g!=f)).slice(0,1)[0];return mc(r,'Three words rhyme. Which word does not rhyme?','तीन शब्दों की तुक मिलती है। किस शब्द की तुक नहीं मिलती?',PW(odd),three.map(PW),{e:`${three.join(', ')} rhyme. "${odd}" does not.`})}
+  const lo=r.sample([...'abdefghmnrt'],3),u=r.pick([...'ABDEFGHMNRT'].filter(x=>!lo.includes(x.toLowerCase())));return mc(r,'Which letter is the odd one out?','कौन सा अक्षर बाकी से अलग है?',T(u),lo.map(x=>T(x)),{e:`${u} is a big letter. The others are small letters.`,hint:'Look at big letters and small letters.'})}});
+
+topic({id:'mysound',s:'en',name:"What's My Sound?",icon:'🔊',
+ it:'A letter has a name and a sound. The letter M is called "em", but its sound is "mmm", like in moon.',ih:'हर अक्षर का एक नाम और एक आवाज़ होती है। M का नाम "एम" है, पर इसकी आवाज़ "म्म्म" है, जैसे moon में।',
+ ex:[seq(['M'])+LB('mmm, as in moon','/m/ as in moon 🌙')+'<p>Name: em. Sound: mmm.</p>'],
+ gen(L,r){const v=r.int(0,2),ls=[...new Set(BS.map(w=>w[0]))].filter(c=>!'aeou'.includes(c)),l=r.pick(ls),w=r.pick(bsBy(l));
+  const badL=n=>r.sample(ls.filter(c=>sg(c)!=sg(l)),n);
+  const oth=n=>{const o=[];for(const x of r.shuffle(BS)){if(sg(x)!=sg(l)&&!o.some(y=>sg(y)==sg(x)))o.push(x);if(o.length==n)break}return o};
+  if(L==1){if(v<2)return mc(r,'Listen to the sound. Which letter makes this sound?','आवाज़ सुनो। कौन सा अक्षर यह आवाज़ करता है?',T(l.toUpperCase()),badL(2).map(c=>T(c.toUpperCase())),{stim:LB(SND[l],'/'+l+'/'),say:SND[l],e:`The letter ${l.toUpperCase()} makes the sound /${l}/, as in ${w}.`});
+   return mc(r,`Which picture begins with the sound of the letter ${l.toUpperCase()}?`,`कौन सा चित्र ${l.toUpperCase()} अक्षर की आवाज़ से शुरू होता है?`,PW(w),oth(2).map(PW),{stim:seq([l.toUpperCase()]),e:`${l.toUpperCase()} says /${l}/, as in ${w}.`})}
+  if(L==2){if(v==0)return mc(r,`The letter ${l.toUpperCase()} — what sound does it make?`,`अक्षर ${l.toUpperCase()} कौन सी आवाज़ करता है?`,`<span class="pw">${T('/'+l+'/')}<small>as in ${w} ${WORDS[w]}</small></span>`,oth(2).map(x=>`<span class="pw">${T('/'+x[0]+'/')}<small>as in ${x} ${WORDS[x]}</small></span>`),{stim:seq([l.toUpperCase()]),e:`${l.toUpperCase()} makes the sound /${l}/, as in ${w}.`});
+   if(v==1)return mc(r,'Listen to the sound. Which picture begins with it?','आवाज़ सुनो। कौन सा चित्र इस आवाज़ से शुरू होता है?',PW(w),oth(3).map(PW),{stim:LB(SND[l],'/'+l+'/'),say:SND[l],e:`"${w}" begins with /${l}/.`});
+   return mc(r,'Listen to the sound. Which small letter makes it?','आवाज़ सुनो। कौन सा छोटा अक्षर यह आवाज़ करता है?',T(l),badL(3).map(c=>T(c)),{stim:LB(SND[l],'/'+l+'/'),say:SND[l],e:`The letter ${l} makes the sound /${l}/.`})}
+  if(v==0){const ws=[w,...oth(3)];return mat(r,'Match each letter with the picture that begins with its sound.','हर अक्षर को उस चित्र से मिलाओ जो उसकी आवाज़ से शुरू होता है।',ws.map(x=>[T(x[0].toUpperCase()),PW(x)]),{e:'Say each word and listen to the first sound.'})}
+  if(v==1){const c=r.pick('bcdhlmprst'.split('').filter(c=>bsBy(c).length>=2)),p=r.sample(bsBy(c),2),o=r.sample(BS.filter(x=>sg(x)!=sg(c)),4);if(sg(o[0])==sg(o[1]))o[1]=BS.find(x=>sg(x)!=sg(c)&&sg(x)!=sg(o[0]));if(sg(o[2])==sg(o[3]))o[3]=BS.find(x=>sg(x)!=sg(c)&&sg(x)!=sg(o[2]));
+   const pr=(a,b)=>`<span class="pair">${PW(a)}${PW(b)}</span>`;return mc(r,'Which two pictures begin with the same sound?','कौन से दो चित्र एक ही आवाज़ से शुरू होते हैं?',pr(p[0],p[1]),[pr(o[0],o[1]),pr(o[2],o[3])],{e:`"${p[0]}" and "${p[1]}" both begin with /${c}/.`})}
+  const ls2=r.sample('bcdhlmprst'.split('').filter(c=>bsBy(c).length>=2),2);return srt(r,'Sort the pictures by the sound they begin with.','चित्रों को उनकी पहली आवाज़ के अनुसार छाँटो।',ls2.map(c=>T('/'+c+'/')),ls2.flatMap((c,b)=>r.sample(bsBy(c),2).map(x=>({html:PW(x),b}))),{e:`Listen for /${ls2[0]}/ or /${ls2[1]}/ at the start.`})}});
+
+const W4=[['frog','o',''],['star','a','i'],['fish','i',''],['drum','u','a'],['crab','a','i'],['flag','a','o'],['swan','a','']];
+topic({id:'missing',s:'en',name:'Missing Letter',icon:'❓',
+ it:'Sometimes a letter is hiding. Look at the letters around it, or at the picture, to find the missing letter.',ih:'कभी-कभी एक अक्षर छिपा होता है। आस-पास के अक्षर या चित्र देखकर छूटा हुआ अक्षर ढूँढो।',
+ ex:[seq(['C','?','T'])+E('🐱')+'<p>The picture is a cat, so the missing letter is A.</p>'],
+ gen(L,r){const v=r.int(0,2);
+  if(L==1||(L==2&&v==0)){const f=L==1?UP:ABC,i=r.int(0,22),b=L==1?r.int(1,2):r.pick([0,3]),a=[0,1,2,3].map(k=>f[i+k]);return fl(r,'Which letter is missing?','कौन सा अक्षर छूट गया है?',a.map((x,k)=>k==b?null:x),T(a[b]),nearL(r,i+b,[i,i+1,i+2,i+3]).map(x=>T(f[x])),{e:`${a.join(', ')} — the missing letter is ${a[b]}.`,hint:'Say the ABC song slowly.'})}
+  const w=r.pick(CVC),pos=L==2?0:r.pick([1,2]);
+  if(L==3&&v==0){const x=r.pick(W4),ww=x[0],bad=r.sample([...VOW].filter(c=>c!=x[1]&&!x[2].includes(c)),2);return fl(r,'Look at the picture. Which letter completes the word?','चित्र देखो। कौन सा अक्षर शब्द को पूरा करता है?',[...ww].map((c,k)=>k==2?null:c.toUpperCase()),T(x[1].toUpperCase()),bad.map(c=>T(c.toUpperCase())),{stim:E(WORDS[ww]),say:ww,e:`The word is ${ww.toUpperCase()}.`})}
+  const pool=pos==1?[...VOW]:[...'bcdfghlmnprst'];const mk=c=>w.slice(0,pos)+c+w.slice(pos+1);let safe=pool.filter(c=>c!=w[pos]&&!W3.has(mk(c)));if(safe.length<2)safe=safe.concat(r.shuffle(pool.filter(c=>c!=w[pos]&&!safe.includes(c))));
+  return fl(r,'Look at the picture. Which letter completes the word?','चित्र देखो। कौन सा अक्षर शब्द को पूरा करता है?',[...w].map((c,k)=>k==pos?null:c.toUpperCase()),T(w[pos].toUpperCase()),r.sample(safe.slice(0,Math.max(2,safe.length)),2).map(c=>T(c.toUpperCase())),{stim:E(WORDS[w]),say:w,e:`The word is ${w.toUpperCase()}.`,hint:`The picture shows a ${w}. Say it slowly.`})}});
+
+const VWORDS=[['apple',2],['banana',3],['orange',3],['tiger',2],['lemon',2],['zebra',2],['rabbit',2],['tomato',3],['elephant',3],['umbrella',3],['octopus',3],['parrot',2],['pencil',2],['violin',3],['mango',2],['grapes',2],['flower',2],['spoon',2],['train',2],['clock',1],['crab',1],['frog',1],['star',1],['drum',1]];
+topic({id:'vowels',s:'en',name:'Vowels and Consonants',icon:'🅰️',
+ it:'A, E, I, O and U are the five vowels. All the other letters are consonants.',ih:'A, E, I, O और U पाँच स्वर (vowels) हैं। बाकी सब अक्षर व्यंजन (consonants) हैं।',
+ ex:[seq(['A','E','I','O','U'])+'<p>These five letters are the vowels.</p>'],
+ gen(L,r){const v=r.int(0,2),C=[...'bcdfghjklmnprstvwz'],bins=[T('Vowels','word'),T('Consonants','word')],cs=f=>f?x=>x.toUpperCase():x=>x;
+  const sortQ=(nv,nc,up)=>srt(r,'Sort the letters into vowels and consonants.','अक्षरों को vowels और consonants में छाँटो।',bins,[...r.sample([...VOW],nv).map(x=>({html:T(cs(up)(x)),b:0})),...r.sample(C,nc).map(x=>({html:T(cs(up)(x)),b:1}))],{e:'A, E, I, O, U are vowels. The rest are consonants.',hint:'The vowels are A, E, I, O, U.'});
+  if(L==1){if(v==0)return sortQ(2,3,1);if(v==1){const x=r.pick([...VOW]).toUpperCase();return mc(r,'Which letter is a vowel?','कौन सा अक्षर vowel है?',T(x),r.sample(C,2).map(c=>T(c.toUpperCase())),{e:`${x} is a vowel. The vowels are A, E, I, O, U.`})}
+   const x=r.pick(C).toUpperCase();return mcN(`Is the letter ${x} a vowel or a consonant?`,`अक्षर ${x} vowel है या consonant?`,bins,1,{stim:seq([x]),e:`${x} is a consonant. Only A, E, I, O, U are vowels.`})}
+  if(L==2){if(v==0)return sortQ(3,3,0);if(v==1){const x=r.pick(C).toUpperCase();return mc(r,'Which letter is a consonant?','कौन सा अक्षर consonant है?',T(x),r.sample([...VOW],3).map(c=>T(c.toUpperCase())),{e:`${x} is a consonant. The others are vowels.`})}
+   const w=r.pick(CVC).toUpperCase();return mcN(`Which letter in the word ${w} is a vowel?`,`शब्द ${w} में कौन सा अक्षर vowel है?`,[...w].map(c=>T(c)),1,{stim:E(WORDS[w.toLowerCase()]),e:`In ${w}, the vowel is ${w[1]}.`,hint:'The vowels are A, E, I, O, U.'})}
+  if(v==0){const x=r.pick(VWORDS);return mc(r,`How many vowels are in the word ${x[0].toUpperCase()}?`,`शब्द ${x[0].toUpperCase()} में कितने vowels हैं?`,T(x[1]),near(r,x[1],0,5).map(n=>T(n)),{stim:seq([...x[0].toUpperCase()]),e:`${x[0].toUpperCase()} has ${x[1]} vowel${x[1]>1?'s':''}: ${[...x[0]].filter(c=>VOW.includes(c)).join(', ').toUpperCase()}.`,hint:'Look for A, E, I, O, U in the word.'})}
+  if(v==1){const vw=r.pick(['apple','egg','umbrella','orange','octopus','ant','elephant']),o=r.sample(BS.filter(w=>!VOW.includes(w[0])),2);return mc(r,'Which word begins with a vowel?','कौन सा शब्द vowel से शुरू होता है?',PW(vw),o.map(PW),{e:`"${vw}" begins with the vowel ${vw[0].toUpperCase()}.`})}
+  const vs=r.sample([...VOW],3),c2=r.sample(C,4);return srt(r,'Sort the big and small letters into vowels and consonants.','बड़े और छोटे अक्षरों को vowels और consonants में छाँटो।',bins,[...vs.map((x,i)=>({html:T(i%2?x:x.toUpperCase()),b:0})),...c2.map((x,i)=>({html:T(i%2?x:x.toUpperCase()),b:1}))],{e:'A, E, I, O, U are vowels, big or small.'})}});
+
+const LOOK=['cat cup car cow','pen pig pan pot pin','bat bag bed bus bug box','dog duck door dish drum','sun sock star','hat hen house','fox fish frog flag'].map(s=>s.split(' '));
+topic({id:'readmatch',s:'en',name:'Read and Match',icon:'📖',
+ it:'Read the word by saying each sound. Then find the picture that shows the word.',ih:'हर आवाज़ बोलकर शब्द पढ़ो। फिर वह चित्र ढूँढो जो उस शब्द को दिखाता है।',
+ ex:[seq(['c','a','t'])+E('🐱')+'<p>c - a - t says cat.</p>'],
+ gen(L,r){const v=r.int(0,2),w=r.pick(CVC),oth=n=>r.sample(CVC.filter(x=>x!=w&&x[0]!=w[0]),n);
+  if(L==1)return v<2?mc(r,'Read the word. Tap the matching picture.','शब्द पढ़ो। सही चित्र को छुओ।',E(WORDS[w]),oth(2).map(x=>E(WORDS[x])),{stim:seq([w.toUpperCase()]),e:`The word is ${w.toUpperCase()}.`,hint:`Say the sounds: ${[...w].join(' - ')}.`}):mc(r,'Look at the picture. Tap its word.','चित्र देखो। उसका शब्द छुओ।',Wd(w),oth(2).map(Wd),{stim:E(WORDS[w]),e:`The picture shows a ${w}.`});
+  if(L==2){if(v==0){const ws=[w,...oth(2)];return mat(r,'Match each word with its picture.','हर शब्द को उसके चित्र से मिलाओ।',ws.map(x=>[Wd(x),E(WORDS[x])]),{e:'Read each word sound by sound.'})}
+   if(v==1)return mc(r,'Look at the picture. Tap its word.','चित्र देखो। उसका शब्द छुओ।',Wd(w),oth(3).map(Wd),{stim:E(WORDS[w]),e:`The picture shows a ${w}.`});
+   return mc(r,'Read the word. Tap the matching picture.','शब्द पढ़ो। सही चित्र को छुओ।',E(WORDS[w]),oth(3).map(x=>E(WORDS[x])),{stim:seq([w]),e:`The word is ${w}.`})}
+  if(v==0){const g=r.pick(LOOK),ww=r.pick(g),o=r.sample(g.filter(x=>x!=ww),2);return mc(r,'Look carefully. Which word matches the picture?','ध्यान से देखो। कौन सा शब्द चित्र से मिलता है?',Wd(ww),o.map(Wd),{stim:E(WORDS[ww]),e:`The picture shows a ${ww}.`,hint:'The words begin the same way. Read to the end of each word.'})}
+  if(v==1){const ws=r.sample(['fish','frog','star','tree','duck','moon','cake','bell','ring','kite','lion','rose'],4);return mat(r,'Match each word with its picture.','हर शब्द को उसके चित्र से मिलाओ।',ws.map(x=>[Wd(x),E(WORDS[x])]),{e:'Read each word, then find its picture.'})}
+  const a=r.pick(['🐶 dog','🐱 cat','🐘 elephant','⚽ ball','🍎 apple']).split(' '),b=r.pick(['🐟 fish','🚗 car','🌸 flower']).split(' '),big=r.int(0,1);
+  return mc(r,'Read the words. Tap the matching picture.','शब्द पढ़ो। सही चित्र को छुओ।',sz(a[0],big?4:1.5),[sz(a[0],big?1.5:4),sz(b[0],big?4:1.5)],{stim:seq([`a ${big?'big':'small'} ${a[1]}`]),e:`This is a ${big?'big':'small'} ${a[1]}.`})}});
+
+const blOf=w=>Object.keys(BL).find(k=>BL[k].includes(w)),BLW=Object.values(BL).flat();
+const BLP=[['bl','br'],['cl','cr'],['fl','fr'],['gl','gr'],['pl','pr'],['sn','sp'],['st','sw'],['tr','dr']];
+topic({id:'blends',s:'en',name:'Beginning Blends',icon:'🧩',
+ it:'A blend is two letters that slide together at the start of a word. We can still hear both sounds, like f and l in flag.',ih:'Blend में शब्द की शुरुआत के दो अक्षर साथ मिलकर बोलते हैं। दोनों आवाज़ें सुनाई देती हैं, जैसे flag में f और l।',
+ ex:[seq(['fl','ag'])+E('🚩')+'<p>f and l slide together: fl-ag.</p>'],
+ gen(L,r){const v=r.int(0,2),w=r.pick(BLW),b=blOf(w),ks=Object.keys(BL),badB=n=>r.sample(ks.filter(k=>k!=b&&!(BX[w]||'').split(' ').includes(k)),n).map(k=>T(k));
+  const othW=n=>{const o=[];for(const x of r.shuffle(BLW)){if(blOf(x)!=b&&!o.some(y=>blOf(y)==blOf(x)))o.push(x);if(o.length==n)break}return o};
+  if(L==1)return v<2?mc(r,`Which blend does "${w}" begin with?`,`"${w}" किस blend से शुरू होता है?`,T(b),badB(2),{stim:PW(w),say:w,e:`"${w}" begins with the blend ${b}.`,hint:'Look at the first two letters of the word.'}):mc(r,`Which word begins with the blend "${b}"?`,`कौन सा शब्द "${b}" blend से शुरू होता है?`,PW(w),othW(2).map(PW),{stim:seq([b]),e:`"${w}" begins with ${b}.`});
+  if(L==2){if(v<2)return fl(r,'Which blend completes the word for the picture?','चित्र के शब्द को कौन सा blend पूरा करता है?',[null,w.slice(2)],T(b),badB(2),{stim:E(WORDS[w]),say:w,e:`${b} + ${w.slice(2)} makes "${w}".`,hint:`The picture shows: ${w}.`});
+   const ws=[w,...othW(2)];return mat(r,'Match each blend with its picture.','हर blend को उसके चित्र से मिलाओ।',ws.map(x=>[T(blOf(x)),PW(x)]),{e:'Look at the first two letters of each word.'})}
+  if(v==0){const pr=r.pick(BLP.filter(p=>p.includes(b)).concat([[b,ks.find(k=>k!=b&&k[0]==b[0])||'st']]));const other=pr.find(k=>k!=b)||'st';const third=r.pick(ks.filter(k=>k!=b&&k!=other));
+   return mc(r,'Listen to the word. Which blend does it begin with?','शब्द सुनो। यह किस blend से शुरू होता है?',T(b),[T(other),T(third)],{stim:E(WORDS[w])+LB(w,'Listen'),say:w,e:`"${w}" begins with ${b}.`,hint:`The word is "${w}".`})}
+  if(v==1){const two=r.sample(ks.filter(k=>BL[k].length>=2),2);return srt(r,'Sort the pictures by their beginning blend.','चित्रों को उनके पहले blend के अनुसार छाँटो।',two.map(k=>T(k)),two.flatMap((k,bi)=>r.sample(BL[k],2).map(x=>({html:PW(x),b:bi}))),{e:`Listen for ${two[0]} or ${two[1]} at the start.`})}
+  const ws=[w,...othW(3)];return mat(r,'Match each blend with its picture.','हर blend को उसके चित्र से मिलाओ।',ws.map(x=>[T(blOf(x)),PW(x)]),{e:'Look at the first two letters of each word.'})}});
+
+topic({id:'shortvowel',s:'en',name:'Short Vowel Sounds',icon:'🎵',
+ it:'Short vowels are quick sounds in the middle of small words: a in cat, e in pen, i in pig, o in dog, u in sun.',ih:'Short vowels छोटे शब्दों के बीच की छोटी आवाज़ें हैं: cat में a, pen में e, pig में i, dog में o, sun में u।',
+ ex:[seq(['c','a','t'])+E('🐱')+'<p>In cat, the middle sound is short a.</p>'],
+ gen(L,r){const v=r.int(0,2),ok=CVC.filter(w=>safeV(w).length>=2),w=r.pick(ok),m=w[1],same=CVC.filter(x=>x!=w&&x[1]==m),diff=n=>{const o=[];for(const x of r.shuffle(CVC)){if(x[1]!=m&&!o.some(y=>y[1]==x[1]))o.push(x);if(o.length==n)break}return o};
+  const fillQ=n=>fl(r,'Which vowel completes the word for the picture?','चित्र के शब्द को कौन सा vowel पूरा करता है?',[w[0].toUpperCase(),null,w[2].toUpperCase()],T(m.toUpperCase()),r.sample(safeV(w),Math.min(n,safeV(w).length)).map(c=>T(c.toUpperCase())),{stim:E(WORDS[w]),say:w,e:`${w.toUpperCase()} has the short ${m} sound.`,hint:`The picture shows: ${w}.`});
+  if(L==1)return fillQ(2);
+  if(L==2){if(v==0)return mc(r,'Listen to the word. Which vowel sound is in the middle?','शब्द सुनो। बीच में कौन सी vowel आवाज़ है?',T(m),r.sample([...VOW].filter(c=>c!=m),2).map(c=>T(c)),{stim:E(WORDS[w])+LB(w,'Listen'),say:w,e:`"${w}" has the short ${m} sound.`,hint:`The word is "${w}".`});
+   if(v==1){const ws=[w,...r.sample(CVC.filter(x=>x!=w),2)];return mat(r,'Match each word with its picture.','हर शब्द को उसके चित्र से मिलाओ।',ws.map(x=>[Wd(x),E(WORDS[x])]),{e:'Read each word sound by sound.'})}
+   const s=r.pick(same);return mc(r,`Which word has the same middle sound as "${w}"?`,`किस शब्द के बीच की आवाज़ "${w}" जैसी है?`,PW(s),diff(2).map(PW),{stim:PW(w),say:w,e:`"${w}" and "${s}" both have the short ${m} sound.`})}
+  if(v==0)return fillQ(3);
+  if(v==1){const two=r.sample([...VOW],2);return srt(r,'Sort the words by their middle vowel sound.','शब्दों को उनके बीच की vowel आवाज़ के अनुसार छाँटो।',two.map(c=>T('short '+c,'word')),two.flatMap((c,b)=>r.sample(CVC.filter(x=>x[1]==c),2).map(x=>({html:PW(x),b}))),{e:`Listen for short ${two[0]} or short ${two[1]} in the middle.`})}
+  return mc(r,`Which picture has the short ${m} sound in the middle?`,`किस चित्र के बीच में short ${m} आवाज़ है?`,PW(w),diff(3).map(PW),{e:`"${w}" has the short ${m} sound.`})}});
+
+topic({id:'rhyme',s:'en',name:'Rhyming Words',icon:'🎶',
+ it:'Rhyming words sound the same at the end, like cat and hat.',ih:'तुक वाले शब्दों का अंत एक जैसा सुनाई देता है, जैसे cat और hat।',
+ ex:[PW('cat')+PW('hat')+'<p>c<b>at</b> and h<b>at</b> end with the same sound.</p>'],
+ gen(L,r){const v=r.int(0,2),f=r.pick(RHY),[a,b]=r.sample(f,2),fi=RHY.indexOf(f),oth=n=>r.sample(RHY.filter((_,i)=>i!=fi),n).map(g=>r.pick(g));
+  const pairsQ=n=>mat(r,'Match the words that rhyme.','तुक वाले शब्दों को मिलाओ।',r.sample(RHY,n).map(g=>{const p=r.sample(g,2);return [PW(p[0]),PW(p[1])]}),{e:'Rhyming words end with the same sound.'});
+  if(L==1)return mc(r,`Which word rhymes with "${a}"?`,`किस शब्द की तुक "${a}" से मिलती है?`,PW(b),oth(2).map(PW),{stim:PW(a),say:a,e:`"${a}" and "${b}" rhyme.`,hint:'Say the words aloud. Which ending sounds the same?'});
+  if(L==2){if(v==0){const o=oth(1)[0];return mc(r,'Two words rhyme. Which word does not rhyme?','दो शब्दों की तुक मिलती है। किस शब्द की तुक नहीं मिलती?',PW(o),[PW(a),PW(b)],{e:`"${a}" and "${b}" rhyme. "${o}" does not.`})}
+   if(v==1)return pairsQ(3);return mc(r,`Which word rhymes with "${a}"?`,`किस शब्द की तुक "${a}" से मिलती है?`,PW(b),oth(3).map(PW),{stim:PW(a),say:a,e:`"${a}" and "${b}" rhyme.`})}
+  if(v==0){const o=oth(4),pr=(x,y)=>`<span class="pair">${PW(x)}${PW(y)}</span>`;return mc(r,'Which two words rhyme?','कौन से दो शब्दों की तुक मिलती है?',pr(a,b),[pr(o[0],o[1]),pr(o[2],o[3])],{e:`"${a}" and "${b}" rhyme.`})}
+  if(v==1)return pairsQ(4);
+  const two=r.sample(RHY.filter(g=>g.length>=3),2);return srt(r,'Sort the words into rhyming families.','शब्दों को तुक वाले परिवारों में छाँटो।',two.map(g=>PW(g[0])),two.flatMap((g,bi)=>r.sample(g.slice(1),2).map(x=>({html:PW(x),b:bi}))),{e:`Words that rhyme with "${two[0][0]}" go together, and words that rhyme with "${two[1][0]}" go together.`})}});
+
+const OW=OPP.flatMap((o,i)=>[{w:o[0],v:o[1],o:o[2],ov:o[3],i},{w:o[2],v:o[3],o:o[0],ov:o[1],i}]);
+const OPV=(w,v)=>`<span class="pw">${v}<small>${w}</small></span>`;
+topic({id:'opposites',s:'en',name:'Opposites',icon:'↔️',
+ it:'Opposites are words that are completely different from each other, like big and small, or hot and cold.',ih:'विलोम (opposites) वे शब्द हैं जो एक-दूसरे से बिल्कुल उल्टे होते हैं, जैसे big और small, या hot और cold।',
+ ex:[OPV('hot',OPP[2][1])+OPV('cold',OPP[2][3])+'<p>Hot is the opposite of cold.</p>'],
+ gen(L,r){const v=r.int(0,2),x=r.pick(OW),bad=n=>r.sample(OW.filter(y=>y.i!=x.i&&!(x.i<2&&y.i<2)),n*2).filter((y,k,a)=>a.findIndex(z=>z.i==y.i)==k).slice(0,n);
+  const pairsQ=n=>mat(r,'Match each word with its opposite.','हर शब्द को उसके विलोम से मिलाओ।',r.sample(OPP,n).map(o=>r.int(0,1)?[OPV(o[0],o[1]),OPV(o[2],o[3])]:[OPV(o[2],o[3]),OPV(o[0],o[1])]),{e:'Opposites are completely different from each other.'});
+  if(L==1)return mc(r,`What is the opposite of "${x.w}"?`,`"${x.w}" का उल्टा क्या है?`,OPV(x.o,x.ov),bad(2).map(y=>OPV(y.w,y.v)),{stim:OPV(x.w,x.v),e:`The opposite of ${x.w} is ${x.o}.`});
+  if(L==2){if(v==0)return pairsQ(3);if(v==1)return mc(r,`What is the opposite of "${x.w}"?`,`"${x.w}" का उल्टा क्या है?`,Wd(x.o),bad(3).map(y=>Wd(y.w)),{stim:OPV(x.w,x.v),e:`The opposite of ${x.w} is ${x.o}.`});
+   return fl(r,'Drag the correct opposite into the empty box.','सही विलोम को खाली डिब्बे में डालो।',[x.w,'↔',null],Wd(x.o),bad(2).map(y=>Wd(y.w)),{e:`The opposite of ${x.w} is ${x.o}.`})}
+  if(v==0)return pairsQ(4);
+  if(v==1){const b=bad(3),pr=(p,q)=>`<span class="pair">${Wd(p)}<span class="tx">–</span>${Wd(q)}</span>`;return mc(r,'Which pair of words are opposites?','कौन सी जोड़ी विलोम शब्दों की है?',pr(x.w,x.o),[pr(b[0].w,b[1].w),pr(b[1].o,b[2].w)],{e:`${x.w} and ${x.o} are opposites.`})}
+  return fl(r,`"${x.w[0].toUpperCase()+x.w.slice(1)}" is the opposite of …`,`"${x.w}" किसका उल्टा है?`,[x.w,'↔',null],Wd(x.o),bad(3).map(y=>Wd(y.w)),{e:`The opposite of ${x.w} is ${x.o}.`})}});
+
+const LOOKL=['bdpq','mnuw','ijlt','EFLT','OQCG','MNWV'];
+topic({id:'recognition',s:'en',name:'Recognition',icon:'🔎',
+ it:'Look carefully at each picture, letter or word. Find the one that is asked for.',ih:'हर चित्र, अक्षर या शब्द को ध्यान से देखो। जो पूछा गया है, उसे ढूँढो।',
+ ex:[seq(['🐶','☂️','🍎'])+'<p>Find the umbrella: it is the one in the middle.</p>'],
+ gen(L,r){const v=r.int(0,2),all=Object.keys(WORDS).filter(w=>BS.includes(w)),w=r.pick(all);
+  if(L==1)return v<2?mc(r,`Find the ${w}.`,`${w} को ढूँढो।`,E(WORDS[w]),r.sample(all.filter(x=>x!=w),v==0?2:3).map(x=>E(WORDS[x])),{say:w,e:`This is the ${w}.`}):(()=>{const i=r.int(0,25);return mc(r,`Tap the letter ${UP[i]}.`,`अक्षर ${UP[i]} को छुओ।`,T(UP[i]),r.sample([...UP].filter(c=>c!=UP[i]),3).map(c=>T(c)),{e:`This is the letter ${UP[i]}.`})})();
+  if(L==2){if(v==0){const ks=Object.keys(CATS).filter(k=>k!='school'&&k!='sea'),a=r.pick(ks),ok=r.pick(CATS[a][1]),bad=[];for(const k of r.shuffle(ks)){if(k!=a&&!(CATBAD[a]||[]).includes(k)&&!(a=='fruit'&&k=='veg')&&!(a=='veg'&&k=='fruit'))bad.push(r.pick(CATS[k][1]));if(bad.length==2)break}
+    const nm={fruit:'a fruit',animal:'an animal',vehicle:'something we ride in',bird:'a bird',veg:'a vegetable',clothes:'something we wear',flower:'a flower'}[a];return mc(r,`Which picture shows ${nm}?`,`कौन सा चित्र ${({fruit:'फल',animal:'जानवर',vehicle:'सवारी',bird:'पक्षी',veg:'सब्ज़ी',clothes:'पहनने की चीज़',flower:'फूल'})[a]} दिखाता है?`,E(ok[1]),bad.map(x=>E(x[1])),{e:`The ${ok[0]} is ${nm}.`})}
+   if(v==1){const g=r.pick(LOOK),ww=r.pick(g);return mc(r,`Find the word "${ww}".`,`शब्द "${ww}" को ढूँढो।`,Wd(ww),r.sample(g.filter(x=>x!=ww),2).map(Wd),{say:ww,e:`This word is "${ww}".`,hint:'Look at every letter in the word.'})}
+   const c=r.pick(CLUES);return mc(r,c[0]+' What is it?',c[1]+' यह क्या है?',E(c[3]),r.sample(NEUTRAL,2).map(x=>E(x)),{e:`It is the ${c[2]}.`})}
+  if(v==0){const c=r.pick(CLUES);return mc(r,c[0]+' What is it?',c[1]+' यह क्या है?',E(c[3]),r.sample(NEUTRAL,3).map(x=>E(x)),{e:`It is the ${c[2]}.`})}
+  if(v==1){const g=r.pick(LOOKL),c=r.pick([...g]);return mc(r,`Look carefully. Tap the letter ${c}.`,`ध्यान से देखो। अक्षर ${c} को छुओ।`,T(c),[...g].filter(x=>x!=c).map(x=>T(x)),{e:`This is the letter ${c}.`,hint:'These letters look alike. Check the shape slowly.'})}
+  const c=r.pick([...'AEMSTB']),n=r.int(2,4),o=r.sample([...UP].filter(x=>x!=c),7-n),row=r.shuffle([...Array(n).fill(c),...o]);return mc(r,`How many times do you see the letter ${c}?`,`अक्षर ${c} कितनी बार दिख रहा है?`,T(n),near(r,n,1,6).map(x=>T(x)),{stim:seq(row),e:`The letter ${c} is there ${n} times.`,hint:'Point to each one as you count.'})}});
+
+const FAM=[['cat','hat'],['cat','bat'],['hen','pen'],['pen','ten'],['van','pan'],['dog','frog'],['fox','box'],['bat','rat'],['pig','pin'],['bug','bus'],['cup','cat'],['pen','pan'],['bed','bag']];
+topic({id:'phonics',s:'en',name:'Phonics',icon:'🗣️',
+ it:'We can join letter sounds to read a word. Say each sound, then push them together: c - a - t makes cat.',ih:'हम अक्षरों की आवाज़ें जोड़कर शब्द पढ़ते हैं। हर आवाज़ बोलो, फिर उन्हें जोड़ो: c - a - t से cat बनता है।',
+ ex:[seq(['c','a','t'])+'<p>/c/ + /a/ + /t/ = cat 🐱</p>'],
+ gen(L,r){const v=r.int(0,2),w=r.pick(CVC),W=w.toUpperCase(),o=n=>r.sample(CVC.filter(x=>x!=w&&x[0]!=w[0]&&x[2]!=w[2]),n);
+  const snds=[...w].map(c=>'/'+c+'/');
+  if(L==1)return v<2?mc(r,`Which sound comes first in ${W}?`,`${W} में सबसे पहले कौन सी आवाज़ आती है?`,T(w[0]),r.sample([...'bcdfghlmnprst'].filter(c=>sg(c)!=sg(w)&&c!=w[2]),2).map(c=>T(c)),{stim:PW(w),say:w,e:`${W} begins with /${w[0]}/.`}):mc(r,'Join the sounds. Which picture is it?','आवाज़ें जोड़ो। यह कौन सा चित्र है?',E(WORDS[w]),o(2).map(x=>E(WORDS[x])),{stim:seq(snds)+LB([...w].map(c=>SND[c].split(',')[0]).join(', ')+'. '+w,'Listen'),e:`${snds.join(' + ')} = ${w}.`,hint:'Say each sound, then say them quickly together.'});
+  if(L==2){if(v==0)return mc(r,`Which sound comes last in ${W}?`,`${W} में सबसे आख़िर में कौन सी आवाज़ आती है?`,T(w[2]),r.sample([...'bdfglmnprst'].filter(c=>c!=w[2]&&c!=w[0]),2).map(c=>T(c)),{stim:PW(w),say:w,e:`${W} ends with /${w[2]}/.`,hint:'Say the word slowly and listen to the end.'});
+   if(v==1)return ord(r,'Build the word for the picture.','चित्र का शब्द बनाओ।',[...W].map(c=>T(c)),{stim:E(WORDS[w]),say:w,e:`${snds.join(' + ')} = ${w}.`,hint:`The picture shows: ${w}. What sound comes first?`});
+   return mc(r,'Join the sounds. Which word do they make?','आवाज़ें जोड़ो। इनसे कौन सा शब्द बनता है?',PW(w),o(3).map(PW),{stim:seq(snds),e:`${snds.join(' + ')} = ${w}.`})}
+  if(v==0){const f=r.pick(FAM),k=f[0][0]!=f[1][0]?0:2;return mc(r,k==0?`Take away /${f[0][0]}/ from "${f[0]}" and put /${f[1][0]}/. What is the new word?`:`Change the last sound of "${f[0]}" to /${f[1][2]}/. What is the new word?`,k==0?`"${f[0]}" से /${f[0][0]}/ हटाओ और /${f[1][0]}/ लगाओ। नया शब्द क्या है?`:`"${f[0]}" की आख़िरी आवाज़ को /${f[1][2]}/ से बदलो। नया शब्द क्या है?`,PW(f[1]),r.sample(CVC.filter(x=>!f.includes(x)&&x.slice(1)!=f[1].slice(1)&&x.slice(0,2)!=f[1].slice(0,2)),2).map(PW),{stim:PW(f[0]),e:`"${f[0]}" changes to "${f[1]}".`})}
+  if(v==1){const ends=CVC.filter(x=>x!=w&&x[2]==w[2]);if(ends.length){const s=r.pick(ends);return mc(r,`Which word ends with the same sound as "${w}"?`,`कौन सा शब्द "${w}" जैसी आवाज़ पर खत्म होता है?`,PW(s),r.sample(CVC.filter(x=>x[2]!=w[2]),2).map(PW),{stim:PW(w),say:w,e:`"${w}" and "${s}" both end with /${w[2]}/.`})}}
+  return ord(r,'Build the word for the picture.','चित्र का शब्द बनाओ।',[...w].map(c=>T(c)),{stim:E(WORDS[w]),say:w,e:`${snds.join(' + ')} = ${w}.`,hint:`The picture shows: ${w}.`})}});
+
+/* =================== MATHEMATICS =================== */
+topic({id:'beforeafter',s:'ma',name:'Before or After Numbers',icon:'↩️',
+ it:'Numbers stand in a line. The number just behind is "before". The number just ahead is "after".',ih:'संख्याएँ एक क्रम में आती हैं। ठीक पीछे वाली संख्या "पहले" और ठीक आगे वाली संख्या "बाद" की होती है।',
+ ex:[seq([6,7,8])+'<p>6 comes before 7. 8 comes after 7.</p>'],
+ gen(L,r){const lo=L==3?20:1,hi=L==1?10:L==2?20:99,v=r.int(0,4),n=r.int(lo+1,hi-1);
+  if(v==0)return mc(r,`What comes after ${n}?`,`${n} के बाद क्या आता है?`,T(n+1),near(r,n+1,lo,hi+1,[n]).map(x=>T(x)),{stim:seq([n,'?']),e:`${n+1} comes after ${n}.`,hint:'Count forward one more.'});
+  if(v==1)return mc(r,`What comes before ${n}?`,`${n} से पहले क्या आता है?`,T(n-1),near(r,n-1,lo-1,hi,[n]).map(x=>T(x)),{stim:seq(['?',n]),e:`${n-1} comes before ${n}.`,hint:'Count back one.'});
+  if(v==2){const s=r.int(lo,hi-3),b=r.int(0,3),a=[0,1,2,3].map(k=>s+k);return fl(r,'Which number is missing?','कौन सी संख्या छूट गई है?',a.map((x,k)=>k==b?null:x),T(a[b]),near(r,a[b],lo-1,hi+1,a).map(x=>T(x)),{e:`${a.join(', ')} — the missing number is ${a[b]}.`})}
+  if(v==3)return mc(r,`Which number comes between ${n-1} and ${n+1}?`,`${n-1} और ${n+1} के बीच में कौन सी संख्या आती है?`,T(n),near(r,n,lo-1,hi+1,[n-1,n+1]).map(x=>T(x)),{stim:seq([n-1,'?',n+1]),e:`${n} is between ${n-1} and ${n+1}.`});
+  const m=Math.max(lo+2,Math.min(hi-2,n)),aft=r.int(0,1),opts=[-2,-1,0,1,2].map(d=>T(m+d));return mcN(`Tap the number that comes just ${aft?'after':'before'} ${m} on the number line.`,`संख्या रेखा पर ${m} के ठीक ${aft?'बाद':'पहले'} वाली संख्या को छुओ।`,opts,aft?3:1,{layout:'line',e:`${aft?m+1:m-1} comes just ${aft?'after':'before'} ${m}.`})}});
+
+topic({id:'tallshort',s:'ma',name:'Tall and Short',icon:'🦒',
+ it:'Tall things reach high up. Short things stay low. Look at the tops to compare.',ih:'लंबी चीज़ें ऊपर तक जाती हैं। छोटी चीज़ें नीचे रहती हैं। तुलना करने के लिए ऊपरी सिरा देखो।',
+ ex:[`<div class="row end">${pole(POLE[0],90)}${pole(POLE[0],35)}</div><p>The first flower is tall. The second flower is short.</p>`],
+ gen(L,r){const v=r.int(0,2),k=r.pick(POLE),n=L==1?3:L==2?4:5,hs=r.sample(L==3?[20,36,52,68,84,100,116]:[20,48,76,104,130],n),mx=Math.max(...hs),mn=Math.min(...hs),P=h=>pole(k,h),srtd=hs.slice().sort((a,b)=>a-b);
+  if(L==1||v==0){const tall=r.int(0,1);return mc(r,`Which ${k[0]} is the ${tall?'tallest':'shortest'}?`,`सबसे ${tall?'लंबा':'छोटा'} ${k[0]} कौन सा है?`,P(tall?mx:mn),hs.filter(h=>h!=(tall?mx:mn)).map(P),{layout:'end',e:`This ${k[0]} is the ${tall?'tallest':'shortest'}.`,hint:'Look at the tops. Which one is highest? Which one is lowest?'})}
+  if(L==2&&v==1){const three=srtd.slice(0,3);return ord(r,'Put them in order from shortest to tallest.','इन्हें सबसे छोटे से सबसे लंबे के क्रम में लगाओ।',three.map(P),{layout:'end',labels:['shortest','','tallest'],e:'Short comes first, then taller, then the tallest.'})}
+  if(L==2){const [a,b]=r.sample(hs,2);return mc(r,`Which ${k[0]} is taller?`,`कौन सा ${k[0]} ज़्यादा लंबा है?`,P(Math.max(a,b)),[P(Math.min(a,b))],{layout:'end',e:`This ${k[0]} reaches higher, so it is taller.`})}
+  if(v==1){const four=srtd.slice(0,4).reverse();return ord(r,'Put them in order from tallest to shortest.','इन्हें सबसे लंबे से सबसे छोटे के क्रम में लगाओ।',four.map(P),{layout:'end',labels:['tallest','','','shortest'],e:'The tallest comes first and the shortest comes last.'})}
+  const three=r.sample(hs,3).sort((a,b)=>a-b);return mc(r,`Which ${k[0]} is neither the tallest nor the shortest?`,`कौन सा ${k[0]} न सबसे लंबा है, न सबसे छोटा?`,P(three[1]),[P(three[0]),P(three[2])],{layout:'end',e:`This ${k[0]} is in the middle: taller than one and shorter than the other.`})}});
+
+topic({id:'heavylight',s:'ma',name:'Heavy and Light',icon:'⚖️',
+ it:'Heavy things are hard to lift. Light things are easy to lift. On a balance, the heavy side goes down.',ih:'भारी चीज़ें उठाना मुश्किल होता है। हल्की चीज़ें आसानी से उठ जाती हैं। तराज़ू में भारी पलड़ा नीचे जाता है।',
+ ex:[scale(E('🐘'),E('🍃'),-1)+'<p>The elephant is heavy, so its side goes down.</p>'],
+ gen(L,r){const v=r.int(0,2),t1=r.int(0,1),t2=t1+2+(t1==0?r.int(0,1):0),lt=r.pick(WT[t1]),hv=r.pick(WT[t2]),P=x=>PN(x[0],x[1]);
+  if(L==1){const heavy=r.int(0,1);return mc(r,`Which is ${heavy?'heavier':'lighter'}?`,`कौन ज़्यादा ${heavy?'भारी':'हल्का'} है?`,P(heavy?hv:lt),[P(heavy?lt:hv)],{e:`The ${hv[0]} is heavier than the ${lt[0]}.`,hint:'Which one is harder to lift?'})}
+  if(L==2){const left=r.int(0,1),heavy=r.int(0,1);if(v<2)return mc(r,`Look at the balance. Which is ${heavy?'heavier':'lighter'}?`,`तराज़ू देखो। कौन ज़्यादा ${heavy?'भारी':'हल्का'} है?`,P(heavy?hv:lt),[P(heavy?lt:hv)],{stim:scale(E(left?hv[1]:lt[1]),E(left?lt[1]:hv[1]),left?-1:1),e:`The ${hv[0]} side goes down, so the ${hv[0]} is heavier.`,hint:'The side that goes down is heavier.'});
+   return mc(r,'Which one will make the balance go down?','कौन सी चीज़ तराज़ू का पलड़ा नीचे कर देगी?',P(hv),[P(lt)],{stim:scale(E('❓'),E('❓'),0),e:`The ${hv[0]} is heavier, so its side goes down.`})}
+  const three=[r.pick(WT[0]),r.pick(WT[r.int(1,2)]),r.pick(WT[3])];
+  if(v==0)return ord(r,'Put them in order from lightest to heaviest.','इन्हें सबसे हल्के से सबसे भारी के क्रम में लगाओ।',three.map(P),{labels:['lightest','','heaviest'],e:`${three.map(x=>x[0]).join(', ')}: from lightest to heaviest.`});
+  if(v==1){const heavy=r.int(0,1);return mc(r,`Which is the ${heavy?'heaviest':'lightest'}?`,`सबसे ${heavy?'भारी':'हल्का'} कौन है?`,P(three[heavy?2:0]),[P(three[1]),P(three[heavy?0:2])],{e:`The ${three[heavy?2:0][0]} is the ${heavy?'heaviest':'lightest'}.`})}
+  const c=r.sample(['🟥','🟦','🟩','🟨'],2),left=r.int(0,1),heavy=r.int(0,1);return mc(r,`Look at the balance. Which box is ${heavy?'heavier':'lighter'}?`,`तराज़ू देखो। कौन सा डिब्बा ज़्यादा ${heavy?'भारी':'हल्का'} है?`,E(heavy?c[0]:c[1]),[E(heavy?c[1]:c[0])],{stim:scale(E(left?c[0]:c[1]),E(left?c[1]:c[0]),left?-1:1),e:'The side that goes down is heavier. The side that goes up is lighter.',hint:'The side that goes down is heavier.'})}});
+
+topic({id:'numbernames',s:'ma',name:'Number Names',icon:'🔢',
+ it:'Every number has a name we can write in words. 5 is written as "five".',ih:'हर संख्या का एक नाम होता है जिसे हम शब्दों में लिख सकते हैं। 5 को "five" लिखते हैं।',
+ ex:[seq([5])+T('five','word')+grp('⭐',5)+'<p>5, five, and five stars all mean the same.</p>'],
+ gen(L,r){const v=r.int(0,3),lo=L==1?1:L==2?11:21,hi=L==1?10:L==2?20:99,n=r.int(lo,hi);
+  const trap=()=>{const c=[...new Set([+(''+n).split('').reverse().join(''),Math.floor(n/10)*10,10+n%10,n+1,n-1,n+10])].filter(x=>x!=n&&x>=10&&x<=100);return r.sample(c,2)},bad=L==3?trap():near(r,n,L==2?10:1,hi,[],2);
+  if(L==3&&v==3){const s=r.sample([10,20,30,40,50,60,70,80,90,100],4);return mat(r,'Match each number with its name.','हर संख्या को उसके नाम से मिलाओ।',s.map(x=>[T(x),Wd(nname(x))]),{e:'Tens: ten, twenty, thirty, forty, fifty…'})}
+  if(v==0)return mc(r,'What is the name of this number?','इस संख्या का नाम क्या है?',Wd(nname(n)),bad.map(x=>Wd(nname(x))),{stim:seq([n]),e:`${n} is called "${nname(n)}".`});
+  if(v==1)return mc(r,`Which number is called "${nname(n)}"?`,`"${nname(n)}" किस संख्या का नाम है?`,T(n),bad.map(x=>T(x)),{say:nname(n),e:`"${nname(n)}" is ${n}.`});
+  if(v==2&&L<3){if(L==1){const e=r.pick(OBJ)[2];return mc(r,`Tap the group that shows "${nname(n)}".`,`वह समूह छुओ जो "${nname(n)}" दिखाता है।`,grp(e,n),near(r,n,1,10).map(x=>grp(e,x)),{e:`"${nname(n)}" means ${n}.`,hint:'Count each group slowly.'})}
+   const s=r.sample([11,12,13,14,15,16,17,18,19,20],4);return mat(r,'Match each number with its name.','हर संख्या को उसके नाम से मिलाओ।',s.map(x=>[T(x),Wd(nname(x))]),{e:'Read each number name slowly.'})}
+  return mc(r,'Listen to the number. Tap it.','संख्या सुनो। उसे छुओ।',T(n),bad.concat(L==3?[]:near(r,n,1,hi,bad,1)).map(x=>T(x)),{stim:LB(nname(n),nname(n)),say:nname(n),e:`"${nname(n)}" is ${n}.`})}});
+
+topic({id:'quantity',s:'ma',name:'Quantity',icon:'🧺',
+ it:'A number tells us how many things there are. Count each thing once to find the number.',ih:'संख्या बताती है कि कितनी चीज़ें हैं। हर चीज़ को एक बार गिनो और संख्या पता करो।',
+ ex:[grp('🦋',4)+seq([4])+'<p>There are four butterflies, so the number is 4.</p>'],
+ gen(L,r){const v=r.int(0,3),hi=L==1?6:L==2?10:15,lo=L==1?1:L==2?4:8,n=r.int(lo,hi),o=r.pick(OBJ);
+  if(v==0){if(L==3){const o2=r.pick(OBJ.filter(x=>x!=o)),a=r.int(3,7),b=r.int(2,6),mix=r.shuffle([...Array(a).fill(o[2]),...Array(b).fill(o2[2])]);return mc(r,`How many ${o[1]} are there? Count only the ${o[1]}.`,`यहाँ कितने ${o[2]} हैं? सिर्फ़ ${o[2]} गिनो।`,T(a),near(r,a,1,10,[],3).map(x=>T(x)),{stim:`<span class="grp tap" style="--c:5">${mix.map(x=>E(x)).join('')}</span>`,e:`There are ${a} ${o[1]}.`,hint:'Tap each one as you count it.'})}
+   return mc(r,`How many ${o[1]} are there?`,`यहाँ कितने ${o[2]} हैं?`,T(n),near(r,n,1,hi+2).map(x=>T(x)),{stim:grp(o[2],n,1),e:`There are ${n} ${o[1]}.`,hint:'Tap each one as you count it.'})}
+  if(v==1)return mc(r,`Tap the group with ${n} ${n==1?o[0]:o[1]}.`,`${n} ${o[2]} वाला समूह छुओ।`,grp(o[2],n),near(r,n,1,hi+2).map(x=>grp(o[2],x)),{e:`This group has ${n} ${n==1?o[0]:o[1]}.`,hint:'Count each group slowly.'});
+  if(v==2){const m=Math.min(n,10);return {t:'collect',n:m,item:o[2],total:Math.min(m+r.int(2,4),14),p:`Put ${m} ${m==1?o[0]:o[1]} in the basket.`,h:`टोकरी में ${m} ${o[2]} डालो।`,e:`The basket needs exactly ${m} ${m==1?o[0]:o[1]}.`,hint:'Count aloud each time you put one in.'}}
+  const k=L==1?3:4,ns=r.sample([...Array(Math.min(hi,10)).keys()].map(x=>x+1),k),es=r.sample(OBJ,k);return mat(r,'Match each number with the group that has that many.','हर संख्या को उतनी चीज़ों वाले समूह से मिलाओ।',ns.map((x,i)=>[T(x),grp(es[i][2],x)]),{e:'Count each group, then find its number.'})}});
+
+topic({id:'moreless',s:'ma',name:'More or Less',icon:'⚖️',
+ it:'More means a bigger number of things. Less, or fewer, means a smaller number. Equal means the same number.',ih:'More का मतलब ज़्यादा चीज़ें। Less या fewer का मतलब कम चीज़ें। Equal का मतलब बराबर।',
+ ex:[`<div class="row">${grp('⚽',5)}<span class="tx">&nbsp;</span>${grp('⚽',3)}</div><p>Five balls are more than three balls.</p>`],
+ gen(L,r){const v=r.int(0,3),[oa,ob,oc]=r.sample(OBJ,3);
+  if(L==1||(L==2&&v<2)){const a=r.int(1,L==1?6:10),d=L==1?r.int(2,3):r.int(1,3),b=a+d<=(L==1?7:10)?a+d:a-d>0?a-d:a+d,more=L==1?v%2:v;const big=Math.max(a,b),sm=Math.min(a,b);
+   return mc(r,`Which group has ${more?'more':'fewer'}?`,`किस समूह में ${more?'ज़्यादा':'कम'} चीज़ें हैं?`,grp(oa[2],more?big:sm),[grp(ob[2],more?sm:big)],{e:`${big} is more than ${sm}.`,hint:'Count both groups.'})}
+  if(L==2){if(v==2){const a=r.int(2,8),eq=r.int(0,1),b=eq?a:a+r.pick([-1,1]);return mcN('Are the two groups equal in number?','क्या दोनों समूहों में बराबर चीज़ें हैं?',[T('👍 Yes, equal','word'),T('👎 No, not equal','word')],eq?0:1,{stim:`<div class="row">${grp(oa[2],a)}<span class="vs">and</span>${grp(ob[2],b)}</div>`,e:eq?`Both groups have ${a}. They are equal.`:`One group has ${a} and the other has ${b}. They are not equal.`,hint:'Count both groups.'})}
+   const ns=r.sample([2,3,4,5,6,7],3),es=r.sample(OBJ,6);return mat(r,'Match the groups that have the same number.','बराबर संख्या वाले समूहों को मिलाओ।',ns.map((x,i)=>[grp(es[i][2],x),grp(es[i+3][2],x)]),{e:'Count each group. Equal groups have the same number.'})}
+  if(v==0){const a=r.int(1,12),b=r.int(0,3)==0?a:r.int(1,12),ans=a>b?0:a<b?1:2;return mcN('Which sign goes in the box?','डिब्बे में कौन सा चिह्न आएगा?',[`<span class="pw">${T('&gt;')}<small>is more than</small></span>`,`<span class="pw">${T('&lt;')}<small>is less than</small></span>`,`<span class="pw">${T('=')}<small>is equal to</small></span>`],ans,{stim:seq([a,'?',b]),e:`${a} ${['is more than','is less than','is equal to'][ans]} ${b}.`,hint:'The open mouth of the sign faces the bigger number.'})}
+  if(v==1){const ns=r.sample([...Array(20).keys()].map(x=>x+1),3),g=r.int(0,1),t=g?Math.max(...ns):Math.min(...ns);return mc(r,`Which number is the ${g?'greatest':'smallest'}?`,`सबसे ${g?'बड़ी':'छोटी'} संख्या कौन सी है?`,T(t),ns.filter(x=>x!=t).map(x=>T(x)),{e:`${t} is the ${g?'greatest':'smallest'} of ${ns.join(', ')}.`})}
+  if(v==2){const n=r.int(2,7);return mc(r,'Which group has one more than this group?','किस समूह में इस समूह से एक ज़्यादा है?',grp(ob[2],n+1),[grp(ob[2],n),grp(ob[2],n-1),grp(ob[2],n+2)],{stim:grp(oa[2],n),e:`This group has ${n}. One more than ${n} is ${n+1}.`})}
+  const ns=r.sample([3,4,5,6,7,8,9],3),mn=Math.min(...ns);return mc(r,'Which group has the fewest?','किस समूह में सबसे कम चीज़ें हैं?',grp(oa[2],mn),ns.filter(x=>x!=mn).map((x,i)=>grp([ob,oc][i][2],x)),{e:`${mn} is the smallest number here.`,hint:'Count every group.'})}});
+
+const PSETS=[COLS.slice(0,4).map(c=>shp('circle',c[1],44)),['square','triangle','star','heart'].map(k=>shp(k,'#7B4FE0',44)),['🍎','🍌','🍇','🍓'],['⭐','🌙','☀️','☁️'],['🐶','🐱','🐭','🐰'],[1,2,3,4].map(n=>T(n))];
+topic({id:'pattern',s:'ma',name:'Pattern',icon:'🔁',
+ it:'A pattern repeats again and again in the same way. Find the part that repeats to know what comes next.',ih:'पैटर्न एक ही तरह से बार-बार दोहराया जाता है। दोहराने वाला हिस्सा ढूँढो और पता करो आगे क्या आएगा।',
+ ex:[seq([PSETS[0][0],PSETS[0][2],PSETS[0][0],PSETS[0][2],'?'])+'<p>Red, blue, red, blue… next is red.</p>'],
+ gen(L,r){const v=r.int(0,3),S=r.sample(r.pick(PSETS),4);
+  const build=(unit,len,blank)=>{const s=Array.from({length:len},(_,i)=>S[unit[i%unit.length]]),ok=s[blank],bad=[...new Set(unit)].map(i=>S[i]).filter(x=>x!=ok);const extra=S.filter(x=>x!=ok&&!bad.includes(x));while(bad.length<2)bad.push(extra.shift());
+   const x={e:`The part that repeats is ${unit.length} long. It tells us what goes in the empty place.`,hint:'Say the pattern aloud and listen for the part that repeats.'};
+   return v%2?mc(r,blank==len-1?'What comes next in the pattern?':'What is missing from the pattern?',blank==len-1?'पैटर्न में आगे क्या आएगा?':'पैटर्न में क्या छूटा है?',ok,bad.slice(0,2),Object.assign({stim:seq(s.map((y,i)=>i==blank?'?':y))},x)):fl(r,blank==len-1?'Drag what comes next in the pattern.':'Drag the missing piece into the pattern.',blank==len-1?'पैटर्न में आगे जो आएगा उसे खींचकर लाओ।':'छूटा हुआ टुकड़ा पैटर्न में खींचकर लाओ।',s.map((y,i)=>i==blank?null:y),ok,bad.slice(0,2),x)};
+  if(L==1){const len=r.pick([5,6]);return build([0,1],len,len-1)}
+  if(L==2){if(v==0)return build([0,1],7,r.int(2,4));const u=r.pick([[0,0,1],[0,1,1],[0,1,2]]),len=6+r.int(1,3);return build(u,len,len-1)}
+  if(v==0){const st=r.pick([2,5,10]),s0=st*r.int(1,3),a=[0,1,2,3,4].map(k=>s0+k*st);return fl(r,'This number pattern grows by the same jump each time. What comes next?','यह संख्या पैटर्न हर बार बराबर बढ़ता है। आगे क्या आएगा?',a.map((x,k)=>k==4?null:x),T(a[4]),[T(a[4]+1),T(a[3]+1),T(a[4]+st)],{e:`The numbers jump by ${st} each time: ${a.join(', ')}.`,hint:`Count how much bigger each number is.`})}
+  const u=r.pick([[0,1,2],[0,0,1,1],[0,1,2,1],[0,1,1,2]]);return build(u,u.length*3,u.length+r.int(0,u.length-1))}});
+
+const SC=()=>COLS.map(c=>c[1]);
+topic({id:'shapes',s:'ma',name:'Shapes',icon:'🔷',
+ it:'Shapes are all around us. A circle is round. A triangle has 3 sides. A square has 4 equal sides.',ih:'आकृतियाँ हमारे चारों ओर हैं। Circle गोल होता है। Triangle की 3 भुजाएँ होती हैं। Square की 4 बराबर भुजाएँ होती हैं।',
+ ex:[`<div class="row">${shp('circle','#2F7BF5',56)}${shp('triangle','#FFC93C',56)}${shp('square','#3ED6A8',56)}</div><p>Circle, triangle, square.</p>`],
+ gen(L,r){const v=r.int(0,3),k=r.pick(SHN),c=r.sample(SC(),4),oth=(n,ex=[])=>r.sample(SHN.filter(x=>x!=k&&!ex.includes(x)),n);
+  if(L==1){if(v==0)return mc(r,`Find the ${k}.`,`${k} को ढूँढो।`,shp(k,c[0]),oth(2).map((x,i)=>shp(x,c[i+1])),{say:k,e:`This shape is a ${k}.`});
+   if(v==1)return mc(r,'What is the name of this shape?','इस आकृति का नाम क्या है?',Wd(k),oth(2).map(Wd),{stim:shp(k,c[0],90),e:`This shape is a ${k}.`});
+   if(v==2){const tri=r.int(0,1);return tri?mc(r,'Which shape has 3 sides?','किस आकृति की 3 भुजाएँ हैं?',shp('triangle',c[0]),r.sample(['circle','square','oval','rectangle','heart'],2).map((x,i)=>shp(x,c[i+1])),{e:'A triangle has 3 sides and 3 corners.',hint:'Count the straight sides of each shape.'}):mc(r,'Which shape is round like a ball?','कौन सी आकृति गेंद की तरह गोल है?',shp('circle',c[0]),r.sample(['square','triangle','rectangle','star','diamond'],2).map((x,i)=>shp(x,c[i+1])),{e:'A circle is round and has no corners.'})}
+   const s=r.sample(SHN,3);return mat(r,'Match each shape with its outline.','हर आकृति को उसकी रूपरेखा से मिलाओ।',s.map((x,i)=>[shp(x,c[i],56),shp(x,'#8A93C2',56,1)]),{e:'A shape and its outline look the same.'})}
+  if(L==2){if(v==0){const o=r.pick(SOBJ);return mc(r,`Which shape does the ${o[0]} look like?`,`${o[0]} किस आकृति जैसा दिखता है?`,shp(o[2],c[0]),r.sample(SHN.filter(x=>x!=o[2]&&!SHX[o[2]].includes(x)),2).map((x,i)=>shp(x,c[i+1])),{stim:E(o[1]),e:`The ${o[0]} looks like a ${o[2]}.`})}
+   if(v==1){const o=r.pick(SOBJ),bad=[];for(const x of r.shuffle(SOBJ)){if(x[2]!=o[2]&&!SHX[o[2]].includes(x[2])&&!bad.some(y=>y[2]==x[2]))bad.push(x);if(bad.length==2)break}return mc(r,`Which object looks like a ${o[2]}?`,`कौन सी चीज़ ${o[2]} जैसी दिखती है?`,PN(o[0],o[1]),bad.map(x=>PN(x[0],x[1])),{stim:shp(o[2],c[0],70),e:`The ${o[0]} looks like a ${o[2]}.`})}
+   if(v==2){const s=r.pick(['triangle','square','circle','rectangle','diamond']);return {t:'trace',shape:s,p:`Trace the ${s}.`,h:`${s} बनाओ। बिंदुओं वाली रेखा पर चलो।`,e:`You traced a ${s}.`,hint:'Start at the green dot and follow the dotted line all the way round.'}}
+   const s=r.sample(SHN,4);return mat(r,'Match each shape with its name.','हर आकृति को उसके नाम से मिलाओ।',s.map((x,i)=>[shp(x,c[i],52),Wd(x)]),{e:'Look at the sides and corners of each shape.'})}
+  if(v==0){const n=r.int(2,4),o=oth(2),row=r.shuffle([...Array(n).fill(k),...Array(r.int(1,2)).fill(o[0]),...Array(r.int(1,2)).fill(o[1])]);return mc(r,`How many ${k}s are there?`,`यहाँ कितने ${k} हैं?`,T(n),near(r,n,1,6).map(x=>T(x)),{stim:`<div class="row">${row.map(x=>shp(x,r.pick(c),46)).join('')}</div>`,e:`There are ${n} ${k}s.`,hint:'Point to each one as you count.'})}
+  if(v==1){const q=r.pick([['sides','triangle',3],['corners','triangle',3],['sides','square',4],['corners','square',4],['sides','rectangle',4],['points','star',5]]);return mc(r,`How many ${q[0]} does a ${q[1]} have?`,`${q[1]} में कितने ${q[0]=='sides'?'भुजाएँ':q[0]=='corners'?'कोने':'नोक'} होते हैं?`,T(q[2]),near(r,q[2],1,7).map(x=>T(x)),{stim:shp(q[1],c[0],100),e:`A ${q[1]} has ${q[2]} ${q[0]}.`,hint:'Count them one by one on the picture.'})}
+  if(v==2){const two=r.sample(['circle','square','triangle','star','heart'],2);return srt(r,'Sort the shapes. Colour and size do not matter.','आकृतियों को छाँटो। रंग और आकार पर ध्यान मत दो।',two.map(x=>Wd(x)),two.flatMap((x,b)=>[0,1,2].map(i=>({html:shp(x,c[(i+b)%4],[40,52,62][i]),b}))),{e:'A shape stays the same shape even when its colour or size changes.'})}
+  const s=r.pick(['star','heart','oval']);return {t:'trace',shape:s,p:`Trace the ${s}.`,h:`${s} बनाओ। बिंदुओं वाली रेखा पर चलो।`,e:`You traced ${s=='oval'?'an':'a'} ${s}.`,hint:'Start at the green dot and follow the dotted line all the way round.'}}});
+
+const SDP=[['🐶','🐱'],['🍎','🍊'],['⭐','🌙'],['🚗','🚌'],['🌸','🌻'],['🐟','🐬'],['🍌','🌽'],['⚽','🏀']];
+const YN=[T('👍 Same','word'),T('👎 Different','word')];
+const tf=(e,t)=>`<span class="em" style="transform:${t}">${e}</span>`;
+topic({id:'samediff',s:'ma',name:'Same or Different',icon:'👯',
+ it:'Things are the same when they match in every way. If anything does not match, they are different.',ih:'जब चीज़ें हर तरह से मिलती हैं तो वे same होती हैं। अगर कुछ भी नहीं मिलता, तो वे different होती हैं।',
+ ex:[seq(['🍎','🍎'])+'<p>Same.</p>'+seq(['🍎','🍊'])+'<p>Different.</p>'],
+ gen(L,r){const v=r.int(0,2),p=r.shuffle(r.pick(SDP)),c=r.sample(SC(),3),k=r.pick(SHN);
+  const diffQ=(same,odd,why)=>mc(r,'Which picture is different?','कौन सा चित्र बाकी से अलग है?',odd,[same,same,same],{e:why,hint:'Three are exactly the same. Look for the one that changed.'});
+  if(L==1){if(v<2)return diffQ(E(p[0]),E(p[1]),'Three pictures are the same. This one is different.');const same=r.int(0,1);return mcN('Are these two pictures the same or different?','ये दो चित्र same हैं या different?',YN,same?0:1,{stim:seq([p[0],same?p[0]:p[1]]),e:same?'Both pictures match. They are the same.':'The pictures do not match. They are different.'})}
+  if(L==2){if(v==0)return diffQ(shp(k,c[0]),shp(k,c[1]),'The shape is the same, but the colour is different.');
+   if(v==1){const e=r.pick(['⚽','🍎','⭐','🐘']);return diffQ(sz(e,2.6),sz(e,r.pick([1.5,3.8])),'The picture is the same, but the size is different.')}
+   const s=r.sample(['🐶','🐱','🐭','🐰','🐻','🐼','🦊','🐯'],4);return mat(r,'Match the pictures that are the same.','एक जैसे चित्रों को मिलाओ।',s.map(x=>[E(x),E(x)]),{e:'Same pictures match in every way.'})}
+  if(v==0){const e=r.pick(['🐟','🚗','✈️','🔑','🍌','🐢']),t=r.pick(['scaleX(-1)','rotate(90deg)','rotate(180deg)']);return diffQ(E(e),tf(e,t),'This picture is turned a different way.')}
+  if(v==1){const e=r.pick(['⭐','🍎','🐝']),n=r.int(2,4);return diffQ(grp(e,n),grp(e,n+r.pick([-1,1])),'The number of things in this group is different.')}
+  const k2=r.pick(SHN.filter(x=>x!=k&&!SHX[k].includes(x)));return mc(r,'Which picture is exactly the same as this one?','कौन सा चित्र बिल्कुल इसके जैसा है?',shp(k,c[0],64),[shp(k,c[1],64),shp(k2,c[0],64),shp(k,c[0],40)],{stim:shp(k,c[0],64),e:'It must match in shape, colour and size.',hint:'Check the shape, then the colour, then the size.'})}});
+
+topic({id:'sizes',s:'ma',name:'Sizes',icon:'📏',
+ it:'Size tells us how big or small something is. We can put things in order: small, medium, big.',ih:'Size बताता है कि कोई चीज़ कितनी बड़ी या छोटी है। हम चीज़ों को क्रम में लगा सकते हैं: small, medium, big।',
+ ex:[`<div class="row end">${sz('⚽',1.3)}${sz('⚽',2.8)}${sz('⚽',4.7)}</div><p>Small, medium, big.</p>`],
+ gen(L,r){const v=r.int(0,2),e=r.pick(['⚽','🍎','📦','🐘','⭐','🎈','🐟','🧸']),n=L==3?4:3,ix=L==1?[0,2,4]:r.sample([0,1,2,3,4],n).sort((a,b)=>a-b),P=i=>sz(e,SZ[i]);
+  if(L==1||(L==2&&v==0)||(L==3&&v==0)){const big=r.int(0,1),t=big?ix[ix.length-1]:ix[0];return mc(r,`Which one is the ${big?'biggest':'smallest'}?`,`सबसे ${big?'बड़ा':'छोटा'} कौन सा है?`,P(t),ix.filter(i=>i!=t).map(P),{layout:'end',e:`This one is the ${big?'biggest':'smallest'}.`})}
+  if(L==2&&v==1)return ord(r,'Put them in order from smallest to biggest.','इन्हें सबसे छोटे से सबसे बड़े के क्रम में लगाओ।',ix.map(P),{layout:'end',labels:['smallest','','biggest'],e:'Small first, then medium, then big.'});
+  if(L==2){const b=r.pick(['📦','🧺','🎁']);return mat(r,'Match each ball with the box of the same size.','हर गेंद को उसी आकार के डिब्बे से मिलाओ।',[0,2,4].map(i=>[sz('⚽',SZ[i]),sz(b,SZ[i])]),{e:'The small ball goes with the small box, and the big ball with the big box.'})}
+  if(v==1)return ord(r,'Put them in order from biggest to smallest.','इन्हें सबसे बड़े से सबसे छोटे के क्रम में लगाओ।',ix.slice().reverse().map(P),{layout:'end',labels:['biggest','','','smallest'],e:'The biggest comes first and the smallest comes last.'});
+  const three=[0,2,4];return mc(r,'Which one is medium — not the biggest and not the smallest?','कौन सा medium है — न सबसे बड़ा, न सबसे छोटा?',P(2),[P(0),P(4)],{layout:'end',e:'The medium one is in between the small one and the big one.'})}});
+
+const SYM=['⭐','🌙','❤️','🔺','🍀','☀️','🐞','🔵'];
+topic({id:'coding',s:'ma',name:'Number Coding',icon:'🔐',
+ it:'In a code, a picture stands for a number. Look at the key to find out which number each picture means.',ih:'कोड में एक चित्र किसी संख्या की जगह आता है। चाबी (key) देखो और पता करो कि हर चित्र का मतलब कौन सी संख्या है।',
+ ex:[keyH([['⭐',2],['🌙',3]])+'<p>The key says ⭐ means 2, so ⭐ ⭐ is 2 and 2.</p>'],
+ gen(L,r){const v=r.int(0,2),s=r.sample(SYM,3),ns=r.sample([1,2,3,4,5],3),key=s.map((x,i)=>[x,ns[i]]),K=keyH(key),i=r.int(0,2);
+  if(L==1)return v<2?mc(r,`Look at the key. Which number does ${s[i]} mean?`,`चाबी देखो। ${s[i]} का मतलब कौन सी संख्या है?`,T(ns[i]),ns.filter((_,j)=>j!=i).map(x=>T(x)),{stim:K,e:`The key shows ${s[i]} = ${ns[i]}.`,hint:'Find the picture in the key. Read the number next to it.'}):mc(r,`Look at the key. Which picture means ${ns[i]}?`,`चाबी देखो। कौन सा चित्र ${ns[i]} दिखाता है?`,E(s[i]),s.filter((_,j)=>j!=i).map(x=>E(x)),{stim:K,e:`The key shows ${s[i]} = ${ns[i]}.`});
+  if(L==2){const j=(i+1+r.int(0,1))%3;if(v==0)return mc(r,`Use the key. What is the number code for ${s[i]} ${s[j]}?`,`चाबी से बताओ। ${s[i]} ${s[j]} का संख्या कोड क्या है?`,T(ns[i]+' '+ns[j]),[T(ns[j]+' '+ns[i]),T(ns[i]+' '+ns[i])],{stim:K,e:`${s[i]} = ${ns[i]} and ${s[j]} = ${ns[j]}, so the code is ${ns[i]} ${ns[j]}.`,hint:'Change each picture into its number, one by one, in the same order.'});
+   if(v==1)return mat(r,'Use the key. Match each picture with its number.','चाबी से हर चित्र को उसकी संख्या से मिलाओ।',key.map(k=>[E(k[0]),T(k[1])]),{stim:K,e:'The key tells us which number each picture means.'});
+   const k3=(i+2)%3;return fl(r,'Use the key. Which number completes the code?','चाबी से बताओ। कोड को कौन सी संख्या पूरा करती है?',[s[i],s[j],s[3-i-j]].map(E).concat(['→',ns[i],ns[j],null]),T(ns[3-i-j]),[T(ns[i]),T(ns[j])],{stim:K,e:`${s[3-i-j]} = ${ns[3-i-j]}.`})}
+  const j=v==0?i:(i+1)%3,sum=ns[i]+ns[j];return mc(r,`Use the key and add. How much is ${s[i]} + ${s[j]}?`,`चाबी देखकर जोड़ो। ${s[i]} + ${s[j]} कितना होता है?`,T(sum),near(r,sum,1,10,[],3).map(x=>T(x)),{stim:K+seq([s[i],'+',s[j],'=','?']),e:`${s[i]} = ${ns[i]} and ${s[j]} = ${ns[j]}. ${ns[i]} + ${ns[j]} = ${sum}.`,hint:'Change each picture into its number. Then count them together.'})}});
+
+topic({id:'graph',s:'ma',name:'Graphing & Graph',icon:'📊',
+ it:'A picture graph uses pictures to show how many. Count the pictures in each row to compare.',ih:'चित्र ग्राफ़ में चित्रों से गिनती दिखाई जाती है। हर पंक्ति के चित्र गिनो और तुलना करो।',
+ ex:[graph([['🍎',3],['🍌',5],['🍊',2]])+'<p>Bananas have the most: 5.</p>'],
+ gen(L,r){const v=r.int(0,2),k=L==3&&v==0?4:3,es=r.sample(['🍎','🍌','🍊','🍇','🍓','🥭'],k),ns=r.sample([1,2,3,4,5,6],k),rows=es.map((e,i)=>[e,ns[i]]),G=graph(rows),mx=ns.indexOf(Math.max(...ns)),mn=ns.indexOf(Math.min(...ns)),i=r.int(0,k-1);
+  const mostQ=m=>mc(r,`Look at the graph. Which fruit has the ${m?'most':'fewest'}?`,`ग्राफ़ देखो। कौन सा फल सबसे ${m?'ज़्यादा':'कम'} है?`,E(es[m?mx:mn]),es.filter((_,j)=>j!=(m?mx:mn)).map(x=>E(x)),{stim:G,e:`${es[m?mx:mn]} has ${ns[m?mx:mn]}, which is the ${m?'most':'fewest'}.`,hint:m?'Find the longest row.':'Find the shortest row.'});
+  if(L==1)return mostQ(v%2);
+  if(L==2){if(v==0)return mc(r,`Look at the graph. How many ${es[i]} are there?`,`ग्राफ़ देखो। कितने ${es[i]} हैं?`,T(ns[i]),near(r,ns[i],1,7).map(x=>T(x)),{stim:G,e:`The ${es[i]} row has ${ns[i]}.`,hint:'Count the pictures in that row.'});
+   if(v==1){const two=es.slice(0,2),cnt=[r.int(1,3),r.int(1,3)];return srt(r,'Build the graph. Put each fruit in its own row.','ग्राफ़ बनाओ। हर फल को उसकी अपनी पंक्ति में रखो।',two.map(x=>E(x)),two.flatMap((x,b)=>Array.from({length:cnt[b]},()=>({html:E(x),b}))),{e:`The graph shows ${cnt[0]} ${two[0]} and ${cnt[1]} ${two[1]}.`})}
+   return mostQ(r.int(0,1))}
+  if(v==0)return mostQ(r.int(0,1));
+  if(v==1){const ms=r.sample([1,2,3,4],3),tot=ms[0]+ms[1]+ms[2];return mc(r,'Look at the graph. How many fruits are there altogether?','ग्राफ़ देखो। कुल मिलाकर कितने फल हैं?',T(tot),near(r,tot,3,12,[],3).map(x=>T(x)),{stim:graph(es.map((e,j)=>[e,ms[j]])),e:`${ms.join(' + ')} = ${tot}.`,hint:'Count every picture in all the rows.'})}
+  const a=mx,b=mn,d=ns[a]-ns[b];return mc(r,`Look at the graph. How many more ${es[a]} than ${es[b]}?`,`ग्राफ़ देखो। ${es[b]} से कितने ज़्यादा ${es[a]} हैं?`,T(d),near(r,d,0,6,[],2).map(x=>T(x)),{stim:G,e:`${ns[a]} is ${d} more than ${ns[b]}.`,hint:'Match the rows one to one. Count the extra pictures.'})}});
+
+topic({id:'colorcopy',s:'ma',name:'Color Copy Challenge',icon:'🎨',
+ it:'Look at the coloured pattern. Make your grid look exactly the same: the same colours in the same places.',ih:'रंगीन पैटर्न को देखो। अपना ग्रिड बिल्कुल वैसा ही बनाओ: वही रंग, उसी जगह पर।',
+ ex:[gridH(['#F0524F','#FFC93C','#FFC93C','#F0524F'],2)+'<p>Copy each square: same colour, same place.</p>'],
+ gen(L,r){const v=r.int(0,3),rows=L==3?3:2,cols=L==1?2:3,nc=L+1,pal=r.sample([0,1,2,3,4,5],nc);let cells;do{cells=Array.from({length:rows*cols},()=>r.pick(pal))}while(new Set(cells).size<2);const hex=i=>COLS[i][1];
+  if(v<2)return {t:'grid',rows,cols,cells,pal,p:'Copy the colour pattern into the empty grid.',h:'रंगों के पैटर्न को खाली ग्रिड में बनाओ।',e:'Each square has the same colour in the same place.',hint:'Do one square at a time. Start at the top row.'};
+  if(v==2){const b=r.int(0,cells.length-1),ok=cells[b],bad=r.sample([0,1,2,3,4,5].filter(x=>x!=ok),2),sw=i=>`<span class="sw" style="background:${hex(i)}" role="img" aria-label="${COLS[i][0]}"></span>`;return mc(r,'The copy has one empty square. Which colour is missing?','नक़ल में एक खाना खाली है। कौन सा रंग छूटा है?',sw(ok),bad.map(sw),{stim:`<div class="row">${gridH(cells.map(hex),cols)}<span class="vs">copy →</span>${gridH(cells.map((c,i)=>i==b?null:hex(c)),cols)}</div>`,e:`The missing square is ${COLS[ok][0]}.`,hint:'Find the same place in the first grid.'})}
+  const alt=()=>{const c=cells.slice(),i=r.int(0,c.length-1);c[i]=r.pick([0,1,2,3,4,5].filter(x=>x!=c[i]));return c},sw=()=>{const c=cells.slice();for(let t=0;t<20;t++){const i=r.int(0,c.length-1),j=r.int(0,c.length-1);if(c[i]!=c[j]){[c[i],c[j]]=[c[j],c[i]];return c}}return alt()};let w1=sw(),w2=alt();if(w1.join()==w2.join())w2=alt();if(w1.join()==w2.join())w2=cells.map(x=>(x+1)%6);
+  return mc(r,'Which grid is an exact copy of this one?','कौन सा ग्रिड बिल्कुल इसके जैसा है?',gridH(cells.map(hex),cols),[gridH(w1.map(hex),cols),gridH(w2.map(hex),cols)],{stim:gridH(cells.map(hex),cols,36),e:'An exact copy has every colour in the same place.',hint:'Check one square at a time.'})}});
+
+topic({id:'dots',s:'ma',name:'Connect the Dots',icon:'✏️',
+ it:'Join the dots in counting order: 1, then 2, then 3… A hidden picture will appear.',ih:'बिंदुओं को गिनती के क्रम में जोड़ो: 1, फिर 2, फिर 3… एक छिपा हुआ चित्र दिखेगा।',
+ ex:[dotsSvg(DOTS[0][2])+'<p>Join 1 to 2 to 3 and back to 1. It makes a triangle.</p>'],
+ gen(L,r){const v=r.int(0,4),d=r.pick(DOTS.filter(x=>x[3]==L)),n=d[2].length,st=L==3&&v==1?r.int(2,9):1,labels=d[2].map((_,i)=>st+i);
+  if(v<3)return {t:'seqtap',layout:'dots',pts:d[2],labels,reveal:[d[1],d[0]],p:`Join the dots from ${st} to ${st+n-1}.`,h:`${st} से ${st+n-1} तक बिंदुओं को जोड़ो।`,e:`The dots make a ${d[0]}.`,hint:`Find number ${st} first. Then look for the next number.`};
+  if(v==3){const k=r.int(st,st+n-2);return mc(r,`You are joining the dots. Which dot comes after dot ${k}?`,`तुम बिंदु जोड़ रहे हो। बिंदु ${k} के बाद कौन सा बिंदु आएगा?`,T(k+1),near(r,k+1,1,st+n+1,[k]).map(x=>T(x)),{stim:dotsSvg(d[2]),e:`We join the dots in counting order, so ${k+1} comes after ${k}.`})}
+  const s=r.pick([DOTS[0],DOTS[1]]);return mc(r,`Join dots 1 to ${s[2].length} and go back to 1. Which shape do you make?`,`बिंदु 1 से ${s[2].length} तक जोड़ो और वापस 1 पर आओ। कौन सी आकृति बनती है?`,shp(s[0],'#2F7BF5'),r.sample(['circle','star','heart',s[0]=='triangle'?'square':'triangle'],2).map(x=>shp(x,'#2F7BF5')),{stim:dotsSvg(s[2]),e:`${s[2].length} dots joined with straight lines make a ${s[0]}.`,hint:'Count the dots. Each dot is a corner.'})}});
+
+topic({id:'hopscotch',s:'ma',name:'Number Hopscotch',icon:'🦘',
+ it:'In hopscotch we jump from one number to the next in order: 1, 2, 3, 4…',ih:'हॉपस्कॉच में हम क्रम से एक संख्या से अगली संख्या पर कूदते हैं: 1, 2, 3, 4…',
+ ex:[hopB([1,2,3,4,5],-1)+'<p>Jump on 1, then 2, then 3, then 4, then 5.</p>'],
+ gen(L,r){const v=r.int(0,3),st=L==1?1:L==2?r.pick([1,1,11]):r.pick([1,11,21,41,91]),n=L==1?r.pick([5,8]):10,labels=Array.from({length:n},(_,i)=>st+i),rows=hopRows(n);
+  if(v==0||(L==3&&v==1)){const back=L==3&&v==1;return {t:'seqtap',layout:'hop',labels,order:back?labels.map((_,i)=>n-1-i):labels.map((_,i)=>i),p:back?`Hop backward from ${st+n-1} down to ${st}.`:`Hop on the numbers in order from ${st} to ${st+n-1}.`,h:back?`${st+n-1} से ${st} तक उल्टी गिनती में कूदो।`:`${st} से ${st+n-1} तक क्रम से संख्याओं पर कूदो।`,e:back?'Counting backward, each number is one less.':'Counting forward, each number is one more.',hint:back?`Start at ${st+n-1}. Then find the number that is one less.`:`Start at ${st}. Then find the next number.`}}
+  const k=r.int(1,n-2),opts=labels.map(x=>T(x));
+  if(v==1){const aft=r.int(0,1);return mcN(`Jump to the number that comes ${aft?'after':'before'} ${labels[k]}.`,`${labels[k]} के ${aft?'बाद':'पहले'} वाली संख्या पर कूदो।`,opts,aft?k+1:k-1,{rows,layout:'hop',e:`${labels[aft?k+1:k-1]} comes ${aft?'after':'before'} ${labels[k]}.`})}
+  if(v==2)return mc(r,'One number is missing on the hopscotch. Which number is it?','हॉपस्कॉच पर एक संख्या छूटी है। वह कौन सी संख्या है?',T(labels[k]),near(r,labels[k],st-1,st+n+1,[],2).map(x=>T(x)),{stim:hopB(labels,k),e:`${labels[k]} comes between ${labels[k-1]} and ${labels[k+1]}.`,hint:'Count along the board from the bottom.'});
+  return mcN(`Jump to the number between ${labels[k-1]} and ${labels[k+1]}.`,`${labels[k-1]} और ${labels[k+1]} के बीच वाली संख्या पर कूदो।`,opts,k,{rows,layout:'hop',e:`${labels[k]} is between ${labels[k-1]} and ${labels[k+1]}.`})}});
+
+topic({id:'counting',s:'ma',name:'Counting',icon:'🧮',
+ it:'When we count, we say one number for each thing: 1, 2, 3… The last number we say tells how many.',ih:'गिनते समय हम हर चीज़ के लिए एक संख्या बोलते हैं: 1, 2, 3… आख़िरी संख्या बताती है कि कुल कितने हैं।',
+ ex:[grp('🦋',5,1)+'<p>Tap each butterfly to count: 1, 2, 3, 4, 5.</p>'],
+ gen(L,r){const v=r.int(0,3),o=r.pick(OBJ),hi=L==1?10:L==2?20:100;
+  if(v==0){const n=L==1?r.int(2,10):L==2?r.int(9,15):r.int(14,20);return mc(r,`Count the ${o[1]}. How many are there?`,`${o[2]} गिनो। कितने हैं?`,T(n),near(r,n,1,22,[],L==1?2:3).map(x=>T(x)),{stim:grp(o[2],n,1),e:`There are ${n} ${o[1]}.`,hint:'Tap each one as you count it.'})}
+  if(v==1){const n=L==1?r.int(1,9):L==2?r.int(10,19):r.pick([29,39,49,59,69,79,89,r.int(21,98)]);return mc(r,`What number comes after ${n} when we count?`,`गिनती में ${n} के बाद कौन सी संख्या आती है?`,T(n+1),near(r,n+1,1,101,[n]).map(x=>T(x)),{stim:seq([n-1,n,'?']),e:`${n-1}, ${n}, ${n+1}.`})}
+  if(v==2){const top=L==1?r.int(5,7):L==2?r.int(8,20):r.int(21,99),a=[0,1,2,3,4].map(k=>top-k),b=r.int(1,4);return fl(r,'Count backward. Which number is missing?','उल्टी गिनती करो। कौन सी संख्या छूटी है?',a.map((x,k)=>k==b?null:x),T(a[b]),near(r,a[b],0,100,a).map(x=>T(x)),{e:`Counting backward: ${a.join(', ')}.`,hint:'Each number is one less than the number before it.'})}
+  if(L==1){const n=r.int(2,8);return mc(r,`Listen. Tap the group that has ${nname(n)}.`,`सुनो। ${nname(n)} वाले समूह को छुओ।`,grp(o[2],n),near(r,n,1,10).map(x=>grp(o[2],x)),{say:nname(n),e:`This group has ${n}.`,hint:'Count each group.'})}
+  if(L==2){const top=r.int(5,6),a=Array.from({length:top},(_,k)=>T(top-k));return ord(r,`Count backward from ${top} to 1.`,`${top} से 1 तक उल्टी गिनती लगाओ।`,a,{e:`${Array.from({length:top},(_,k)=>top-k).join(', ')}.`,hint:`Start with ${top}.`})}
+  const s=r.pick([10,20,30,40,50]),a=[0,1,2,3].map(k=>s+k*10),b=r.int(1,3);return fl(r,'Count in tens. Which number is missing?','दस-दस करके गिनो। कौन सी संख्या छूटी है?',a.map((x,k)=>k==b?null:x),T(a[b]),[T(a[b]+1),T(a[b]-5),T(a[b]+5)],{e:`Counting in tens: ${a.join(', ')}.`})}});
+
+/* ---- fixed bank: 8 unique questions per level per topic, deterministic ---- */
+const qkey=q=>JSON.stringify([q.t,q.p,q.stim||'',q.opts?q.opts[q.a]:'',q.items||'',q.pairs||'',q.parts||'',q.glyph||q.shape||'',q.cells||'',q.labels||'',q.n||'']);
+function buildBank(){const B={};TOPICS.forEach((tp,ti)=>{const list=[];for(let L=1;L<=3;L++){const seen=new Set();let n=0;for(let k=0;k<400&&n<8;k++){const q=tp.gen(L,RNG(1000+ti*7919+L*104729+k*31));const key=qkey(q);if(seen.has(key))continue;seen.add(key);q.id=tp.id+'-'+L+'-'+n;q.L=L;q.topic=tp.id;list.push(q);n++}}B[tp.id]=list});return B}
+function freshQ(tp,L){const q=tp.gen(L,RNG((Math.random()*2**31)|0));q.id=tp.id+'-'+L+'-x'+Math.random().toString(36).slice(2,8);q.L=L;q.topic=tp.id;return q}
+if(typeof module!=='undefined')module.exports={TOPICS,buildBank,freshQ,RNG};
+/* ===== UI engine: storage, speech, sounds, drag helper, activity widgets ===== */
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const h=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(tag=='button')e.type='button';return e};
+const KEY='magicOlympiadLKG.v1';
+const DEF=()=>({name:'',me:0,av:[{sk:1,hs:1,hc:0,sh:0},{sk:2,hs:0,hc:3,sh:3}],set:{sound:true,vol:1,hi:false,diff:0,qn:8,mockN:20,timer:false,mins:20,goal:10},topics:{},stars:0,daily:{d:'',n:0},days:[],time:0,mocks:[],retryWins:0,last:'',badges:{}});
+let S=DEF(),storeOK=true;
+function load(){try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j){const d=DEF();S=Object.assign(d,j);S.set=Object.assign(DEF().set,j.set||{})}localStorage.setItem(KEY+'.t','1')}catch(e){storeOK=false}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){storeOK=false}}
+
+/* ---- speech ---- */
+const TTS={ok:typeof speechSynthesis!='undefined',en:null,hi:null,
+ init(){if(!this.ok)return;const pick=()=>{const v=speechSynthesis.getVoices();this.en=v.find(x=>/^en[-_]IN/i.test(x.lang))||v.find(x=>/^en[-_]GB/i.test(x.lang))||v.find(x=>/^en/i.test(x.lang))||null;this.hi=v.find(x=>/^hi/i.test(x.lang))||null};pick();try{speechSynthesis.addEventListener('voiceschanged',pick)}catch(e){}},
+ clean(t){return String(t).replace(/<[^>]+>/g,' ').replace(/\/([a-z])\//g,(m,c)=>' '+(SND[c]||c).split(',')[0]+' ').replace(/[\p{Extended_Pictographic}️‍]/gu,' ').replace(/_+/g,' blank ').replace(/\s+/g,' ').trim()},
+ say(t,lang,keep){if(!this.ok||!S.set.sound)return;try{if(!keep)speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(this.clean(t));const hi=lang=='hi'&&this.hi;u.lang=hi?'hi-IN':'en-IN';const v=hi?this.hi:this.en;if(v)u.voice=v;u.rate=.82;u.pitch=1.1;u.volume=S.set.vol;speechSynthesis.speak(u)}catch(e){}},
+ stop(){try{this.ok&&speechSynthesis.cancel()}catch(e){}}};
+function sayQ(q){if(S.set.hi&&TTS.hi)TTS.say(q.h,'hi');else TTS.say(q.p,'en');if(q.say)TTS.say(q.say,'en',true)}
+
+/* ---- sound effects ---- */
+let AC=null;
+function tone(f,t0,d,type='sine',g=.16){if(!AC)return;const o=AC.createOscillator(),a=AC.createGain();o.type=type;o.frequency.value=f;a.gain.setValueAtTime(0,AC.currentTime+t0);a.gain.linearRampToValueAtTime(g*S.set.vol,AC.currentTime+t0+.02);a.gain.exponentialRampToValueAtTime(.001,AC.currentTime+t0+d);o.connect(a).connect(AC.destination);o.start(AC.currentTime+t0);o.stop(AC.currentTime+t0+d+.05)}
+function sfx(k){if(!S.set.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state=='suspended')AC.resume();
+ if(k=='good'){tone(660,0,.14,'triangle');tone(880,.12,.2,'triangle')}else if(k=='oops'){tone(300,0,.18,'sine',.12);tone(250,.14,.22,'sine',.12)}else if(k=='tap')tone(520,0,.07,'triangle',.1);else if(k=='win')[523,659,784,1047].forEach((f,i)=>tone(f,i*.13,.25,'triangle'))}catch(e){}}
+
+/* ---- drag with tap fallback ---- */
+function drag(el,o){let st=null,sup=false;
+ el.addEventListener('pointerdown',e=>{if(el.closest('.lock'))return;st={x:e.clientX,y:e.clientY,m:false};try{el.setPointerCapture(e.pointerId)}catch(_){}});
+ el.addEventListener('pointermove',e=>{if(!st)return;const dx=e.clientX-st.x,dy=e.clientY-st.y;if(!st.m&&Math.hypot(dx,dy)>10){st.m=true;el.classList.add('dragging')}if(st.m)el.style.transform=`translate(${dx}px,${dy}px) scale(1.06)`});
+ const end=e=>{if(!st)return;const m=st.m;st=null;el.style.transform='';el.classList.remove('dragging');if(m){sup=true;setTimeout(()=>sup=false,80);el.style.pointerEvents='none';const t=document.elementFromPoint(e.clientX,e.clientY);el.style.pointerEvents='';const z=t&&t.closest('[data-drop]');if(z&&o.drop)o.drop(z)}};
+ el.addEventListener('pointerup',end);el.addEventListener('pointercancel',()=>{st=null;el.style.transform='';el.classList.remove('dragging')});
+ el.addEventListener('click',()=>{if(sup){sup=false;return}if(el.closest('.lock'))return;o.tap&&o.tap()})}
+const shake=el=>{el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')};
+
+/* ================= widgets =================
+   each returns {el, auto, complete(), correct(), wrong(), reveal(), lock(), hint?(), shown?()} */
+function wMcq(q,cx){const el=h('div','w-mcq');let sel=-1,slot=null;const out=new Set();
+ if(q.t=='fill'){const s=h('div','seq');q.parts.forEach(p=>{if(p==null){slot=h('span','tile slot','?');slot.dataset.drop='slot';s.append(slot)}else s.append(h('span','tile',p))});el.append(s)}
+ const box=h('div','opts '+(q.layout||'')+(q.opts.length==2?' two':''));
+ const btns=q.opts.map((o,i)=>{const b=h('button','opt',o);const choose=()=>{if(out.has(i))return;sel=i;btns.forEach((x,j)=>x.classList.toggle('sel',j==i));if(slot){slot.innerHTML=o;slot.classList.add('filled')}sfx('tap');cx.change()};
+  if(slot){b.classList.add('drag');drag(b,{tap:choose,drop:choose})}else b.addEventListener('click',()=>{if(!el.classList.contains('lock'))choose()});return b});
+ if(q.rows)q.rows.forEach(r=>{const d=h('div','hrow');r.forEach(i=>{btns[i].classList.add('hopt');d.append(btns[i])});box.append(d)});else btns.forEach(b=>box.append(b));
+ el.append(box);
+ return {el,auto:true,complete:()=>sel>=0,correct:()=>sel===q.a,
+  wrong(){if(sel>=0){out.add(sel);btns[sel].classList.add('bad');btns[sel].classList.remove('sel');shake(btns[sel])}if(slot){slot.innerHTML='?';slot.classList.remove('filled')}sel=-1},
+  reveal(){btns[q.a].classList.add('good');if(slot){slot.innerHTML=q.opts[q.a];slot.classList.add('filled','good')}},
+  hint(){const c=btns.map((b,i)=>i).filter(i=>i!=q.a&&!out.has(i));if(c.length>1){out.add(c[0]);btns[c[0]].classList.add('bad')}},
+  lock(){el.classList.add('lock')}}}
+
+function wOrder(q,cx){const el=h('div','w-order'+(q.layout=='end'?' end':'')),n=q.items.length,place=Array(n).fill(-1),sr=h('div','slots'),tr=h('div','tray');tr.dataset.drop='tray';
+ const slots=q.items.map((_,i)=>{const w=h('div','slotw'),s=h('div','oslot');s.dataset.drop=i;w.append(s,h('small','',(q.labels&&q.labels[i])||String(i+1)));sr.append(w);return s});
+ const tiles=q.sh.map(ix=>{const b=h('button','opt drag',q.items[ix]);b.dataset.ix=ix;
+  drag(b,{tap(){const si=place.indexOf(ix);if(si>=0)place[si]=-1;else{const f=place.indexOf(-1);if(f>=0)place[f]=ix}sfx('tap');render()},
+   drop(z){const d=z.dataset.drop,cur=place.indexOf(ix);if(d=='tray'){if(cur>=0)place[cur]=-1}else{const si=+d,o=place[si];if(cur>=0)place[cur]=o;place[si]=ix}sfx('tap');render()}});return b});
+ function render(){tiles.forEach(b=>{const si=place.indexOf(+b.dataset.ix);b.classList.remove('bad');(si>=0?slots[si]:tr).append(b)});cx.change()}
+ el.append(sr,tr);tiles.forEach(b=>tr.append(b));
+ return {el,complete:()=>place.every(x=>x>=0),correct:()=>place.every((ix,i)=>ix>=0&&q.items[ix]===q.items[i]),
+  wrong(){place.forEach((ix,i)=>{if(ix>=0&&q.items[ix]!==q.items[i]){place[i]=-1;shake(tiles.find(b=>+b.dataset.ix==ix))}});render()},
+  reveal(){const was=place.slice();q.items.forEach((_,i)=>place[i]=i);render();slots.forEach((s,i)=>s.classList.add(was[i]>=0&&q.items[was[i]]===q.items[i]?'good':'fix'))},lock(){el.classList.add('lock')}}}
+
+function wSort(q,cx){const el=h('div','w-sort'),loc=q.items.map(()=>-1),br=h('div','bins'),tr=h('div','tray');tr.dataset.drop='tray';let sel=-1;
+ const bins=q.bins.map((b,i)=>{const w=h('div','bin');w.dataset.drop=i;w.tabIndex=0;w.setAttribute('role','button');w.append(h('div','binl',b),h('div','bini'));const go=()=>{if(sel>=0&&!el.classList.contains('lock')){loc[sel]=i;sel=-1;sfx('tap');render()}};w.addEventListener('click',e=>{if(!e.target.closest('.opt'))go()});w.addEventListener('keydown',e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();go()}});br.append(w);return w});
+ const tiles=q.items.map((it,i)=>{const b=h('button','opt drag',it.html);drag(b,{tap(){if(loc[i]>=0){loc[i]=-1;sel=-1}else sel=sel==i?-1:i;sfx('tap');render()},drop(z){const d=z.dataset.drop;loc[i]=d=='tray'?-1:+d;sel=-1;sfx('tap');render()}});return b});
+ function render(){tiles.forEach((b,i)=>{b.classList.toggle('sel',sel==i);(loc[i]>=0?$('.bini',bins[loc[i]]):tr).append(b)});el.classList.toggle('picking',sel>=0);cx.change()}
+ el.append(br,tr);render();
+ return {el,complete:()=>loc.every(x=>x>=0),correct:()=>loc.every((b,i)=>b===q.items[i].b),
+  wrong(){loc.forEach((b,i)=>{if(b>=0&&b!==q.items[i].b){loc[i]=-1;shake(tiles[i])}});render()},
+  reveal(){q.items.forEach((it,i)=>{if(loc[i]!==it.b)tiles[i].classList.add('fix');loc[i]=it.b});render()},lock(){el.classList.add('lock')}}}
+
+const LCOL=['#7B4FE0','#2F7BF5','#FF8A3D','#17A673','#E0529C'];
+function wMatch(q,cx){const el=h('div','w-match'),n=q.pairs.length,link=Array(n).fill(-1),L=h('div','mcol'),R=h('div','mcol'),svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('class','mlines');let sel=-1,selR=-1;
+ const join=(i,j)=>{link.forEach((x,k)=>{if(x==j)link[k]=-1});link[i]=j;sel=selR=-1;sfx('tap');render()};
+ const ls=q.pairs.map((p,i)=>{const b=h('button','opt drag',p[0]);b.dataset.drop='L'+i;drag(b,{tap(){if(selR>=0)return join(i,selR);if(link[i]>=0&&sel<0){link[i]=-1}else sel=sel==i?-1:i;sfx('tap');render()},drop(z){const d=z.dataset.drop;if(d&&d[0]=='R')join(i,+d.slice(1))}});L.append(b);return b});
+ const rs=[];q.ro.forEach(j=>{const b=h('button','opt drag',q.pairs[j][1]);b.dataset.drop='R'+j;drag(b,{tap(){if(sel>=0)return join(sel,j);const k=link.indexOf(j);if(k>=0)link[k]=-1;else selR=selR==j?-1:j;sfx('tap');render()},drop(z){const d=z.dataset.drop;if(d&&d[0]=='L')join(+d.slice(1),j)}});R.append(b);rs[j]=b});
+ function lines(){const r=el.getBoundingClientRect();if(!r.width)return;svg.setAttribute('viewBox',`0 0 ${r.width} ${r.height}`);svg.innerHTML=link.map((j,i)=>{if(j<0)return'';const a=ls[i].getBoundingClientRect(),b=rs[j].getBoundingClientRect();return `<line x1="${a.right-r.left}" y1="${a.top+a.height/2-r.top}" x2="${b.left-r.left}" y2="${b.top+b.height/2-r.top}" stroke="${LCOL[i%5]}" stroke-width="6" stroke-linecap="round"/>`}).join('')}
+ function render(){ls.forEach((b,i)=>{b.classList.toggle('sel',sel==i);b.style.borderColor=link[i]>=0?LCOL[i%5]:''});rs.forEach((b,j)=>{const k=link.indexOf(j);b.classList.toggle('sel',selR==j);b.style.borderColor=k>=0?LCOL[k%5]:''});lines();cx.change()}
+ el.append(L,svg,R);const ro=typeof ResizeObserver!='undefined'&&new ResizeObserver(lines);ro&&ro.observe(el);
+ return {el,shown:lines,complete:()=>link.every(x=>x>=0),correct:()=>link.every((x,i)=>x===i),
+  wrong(){link.forEach((x,i)=>{if(x>=0&&x!==i){link[i]=-1;shake(ls[i])}});render()},
+  reveal(){link.forEach((x,i)=>{if(x!==i)ls[i].classList.add('fix');link[i]=i});render()},lock(){el.classList.add('lock')}}}
+
+function wCollect(q,cx){const el=h('div','w-collect'),inb=Array(q.total).fill(false),bk=h('div','basket'),tr=h('div','tray');bk.dataset.drop='in';tr.dataset.drop='out';bk.append(h('div','bini'),h('div','bkl','🧺'));
+ const tiles=inb.map((_,i)=>{const b=h('button','opt drag mini',E(q.item));drag(b,{tap(){inb[i]=!inb[i];if(inb[i])TTS.say(String(inb.filter(Boolean).length),'en');render()},drop(z){inb[i]=z.dataset.drop=='in';render()}});return b});
+ function render(){tiles.forEach((b,i)=>(inb[i]?$('.bini',bk):tr).append(b));cx.change()}
+ el.append(tr,bk);render();
+ return {el,complete:()=>inb.some(Boolean),correct:()=>inb.filter(Boolean).length===q.n,wrong(){shake(bk)},
+  reveal(){inb.forEach((_,i)=>inb[i]=i<q.n);render()},lock(){el.classList.add('lock')}}}
+
+function wGrid(q,cx){const el=h('div','w-grid'),mine=q.cells.map(()=>-1);let cur=q.pal[0];
+ const model=h('div','gbox','<small>Copy this</small>'+gridH(q.cells.map(c=>COLS[c][1]),q.cols,46)),me=h('div','gbox','<small>Your grid</small>'),g=h('div','cgrid work');g.style.gridTemplateColumns=`repeat(${q.cols},46px)`;
+ const cells=mine.map((_,i)=>{const b=h('button','gcell');b.dataset.drop='c'+i;b.setAttribute('aria-label','square '+(i+1));b.addEventListener('click',()=>{if(el.classList.contains('lock'))return;mine[i]=cur;sfx('tap');render()});g.append(b);return b});
+ const pal=h('div','pal');const pb=q.pal.map(c=>{const b=h('button','pcol drag');b.style.background=COLS[c][1];b.setAttribute('aria-label',COLS[c][0]);drag(b,{tap(){cur=c;render()},drop(z){const d=z.dataset.drop;if(d&&d[0]=='c'){mine[+d.slice(1)]=c;cur=c;sfx('tap');render()}}});pal.append(b);return b});
+ const rs=h('button','btn ghost sm','↺ Start again');rs.addEventListener('click',()=>{if(el.classList.contains('lock'))return;mine.fill(-1);render()});
+ function render(){cells.forEach((b,i)=>{b.style.background=mine[i]>=0?COLS[mine[i]][1]:'';b.classList.remove('fix')});pb.forEach((b,i)=>b.classList.toggle('sel',q.pal[i]==cur));cx.change()}
+ me.append(g);el.append(h('div','grow2'),pal,rs);$('.grow2',el).append(model,me);render();
+ return {el,complete:()=>mine.every(x=>x>=0),correct:()=>mine.every((x,i)=>x===q.cells[i]),
+  wrong(){mine.forEach((x,i)=>{if(x!==q.cells[i]){mine[i]=-1;shake(cells[i])}});render()},
+  reveal(){const was=mine.slice();q.cells.forEach((c,i)=>mine[i]=c);render();was.forEach((x,i)=>{if(x!==q.cells[i])cells[i].classList.add('fix')})},lock(){el.classList.add('lock')}}}
+
+const TPATH={triangle:[[150,40],[262,250],[38,250]],square:[[55,55],[245,55],[245,245],[55,245]],rectangle:[[30,85],[270,85],[270,215],[30,215]],diamond:[[150,28],[255,150],[150,272],[45,150]],star:[[150,24],[181,112],[274,112],[199,168],[228,258],[150,204],[72,258],[101,168],[26,112],[119,112]]};
+function wTrace(q,cx){const el=h('div','w-trace'),Z=300,cv=h('canvas','tcv'),dpr=Math.min(window.devicePixelRatio||1,2);cv.width=cv.height=Z*dpr;cv.setAttribute('role','img');cv.setAttribute('aria-label','Tracing board for '+(q.glyph||q.shape));
+ const c=cv.getContext('2d'),mk=document.createElement('canvas');mk.width=mk.height=Z;const m=mk.getContext('2d',{willReadFrequently:true}),tint=document.createElement('canvas');tint.width=tint.height=Z;
+ let mask=null,start=[150,40],strokes=[],cur=null,font='',gx=0,gy=0,solved=false;
+ const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+ function shapePath(k){k.beginPath();const s=q.shape;if(s=='circle')k.arc(150,150,108,-Math.PI/2,Math.PI*1.5);else if(s=='oval')k.ellipse(150,150,125,78,0,-Math.PI/2,Math.PI*1.5);else if(s=='heart'){k.moveTo(150,262);k.bezierCurveTo(30,172,12,100,54,58);k.bezierCurveTo(90,22,138,40,150,82);k.bezierCurveTo(162,40,210,22,246,58);k.bezierCurveTo(288,100,270,172,150,262)}else{const p=TPATH[s];p.forEach((a,i)=>i?k.lineTo(a[0],a[1]):k.moveTo(a[0],a[1]));k.closePath()}}
+ function build(){m.clearRect(0,0,Z,Z);m.fillStyle=m.strokeStyle='#000';m.lineJoin=m.lineCap='round';
+  if(q.glyph){let fs=230;const F=s=>`700 ${s}px Andika, "Baloo 2", sans-serif`;m.font=F(fs);let t=m.measureText(q.glyph);const w=t.actualBoundingBoxLeft+t.actualBoundingBoxRight,hh=t.actualBoundingBoxAscent+t.actualBoundingBoxDescent;fs=Math.min(330,fs*Math.min(225/w,225/hh));font=F(fs);m.font=font;t=m.measureText(q.glyph);gx=Z/2-(t.actualBoundingBoxRight-t.actualBoundingBoxLeft)/2;gy=Z/2+(t.actualBoundingBoxAscent-t.actualBoundingBoxDescent)/2;m.lineWidth=14;m.fillText(q.glyph,gx,gy);m.strokeText(q.glyph,gx,gy)}
+  else{m.lineWidth=34;shapePath(m);m.stroke()}
+  const d=m.getImageData(0,0,Z,Z).data;mask=new Uint8Array(Z*Z);for(let i=0;i<Z*Z;i++)mask[i]=d[i*4+3]>60?1:0;
+  if(q.glyph){outer:for(let y=0;y<Z;y++)for(let x=0;x<Z;x++)if(mask[y*Z+x]){let x2=x;while(x2<Z&&mask[y*Z+x2])x2++;start=[Math.min((x+x2)/2,x+26),y+20];break outer}}
+  else start=q.shape=='circle'?[150,42]:q.shape=='oval'?[150,72]:q.shape=='heart'?[150,82]:TPATH[q.shape][0];
+  const tc=tint.getContext('2d');tc.clearRect(0,0,Z,Z);tc.drawImage(mk,0,0);tc.globalCompositeOperation='source-in';tc.fillStyle=css('--trace')||'#CFE0FF';tc.fillRect(0,0,Z,Z);tc.globalCompositeOperation='source-over';draw()}
+ function draw(){c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,Z,Z);c.drawImage(tint,0,0);c.lineJoin=c.lineCap='round';
+  c.setLineDash([3,11]);c.lineWidth=4;c.strokeStyle=css('--purple')||'#7B4FE0';if(q.glyph){c.font=font;c.strokeText(q.glyph,gx,gy)}else{shapePath(c);c.stroke()}c.setLineDash([]);
+  c.strokeStyle=solved?(css('--good')||'#17A673'):(css('--blue')||'#2F7BF5');c.lineWidth=22;strokes.forEach(s=>{c.beginPath();s.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));if(s.length==1)c.lineTo(s[0][0]+.1,s[0][1]);c.stroke()});
+  if(!strokes.length){c.fillStyle='#17A673';c.beginPath();c.arc(start[0],start[1],11,0,7);c.fill();c.fillStyle='#fff';c.beginPath();c.moveTo(start[0]-5,start[1]-3);c.lineTo(start[0]+5,start[1]-3);c.lineTo(start[0],start[1]+6);c.fill()}}
+ const pos=e=>{const r=cv.getBoundingClientRect();return [(e.clientX-r.left)/r.width*Z,(e.clientY-r.top)/r.height*Z]};
+ cv.addEventListener('pointerdown',e=>{if(el.classList.contains('lock'))return;e.preventDefault();try{cv.setPointerCapture(e.pointerId)}catch(_){}cur=[pos(e)];strokes.push(cur);draw()});
+ cv.addEventListener('pointermove',e=>{if(!cur)return;cur.push(pos(e));draw()});
+ const up=()=>{if(cur){cur=null;cx.change()}};cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+ function score(){if(!mask)return false;const G=15,n=Z/G,tg=new Uint8Array(n*n),hit=new Uint8Array(n*n);let nt=0;for(let cy=0;cy<n;cy++)for(let cx2=0;cx2<n;cx2++){let k=0;for(let y=1;y<G;y+=3)for(let x=1;x<G;x+=3)k+=mask[(cy*G+y)*Z+cx2*G+x];if(k>=8){tg[cy*n+cx2]=1;nt++}}
+  let tot=0,off=0;const at=(x,y)=>x>=0&&y>=0&&x<Z&&y<Z&&mask[(y|0)*Z+(x|0)];
+  const visit=(x,y)=>{tot++;let inside=at(x,y);for(let a=0;a<8&&!inside;a++)inside=at(x+Math.cos(a*.785)*10,y+Math.sin(a*.785)*10);if(!inside)off++;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const gx2=Math.floor(x/G)+dx,gy2=Math.floor(y/G)+dy;if(gx2>=0&&gy2>=0&&gx2<n&&gy2<n&&Math.hypot((gx2+.5)*G-x,(gy2+.5)*G-y)<19)hit[gy2*n+gx2]=1}};
+  strokes.forEach(s=>s.forEach((p,i)=>{if(i){const a=s[i-1],d=Math.hypot(p[0]-a[0],p[1]-a[1]),k=Math.max(1,Math.ceil(d/5));for(let j=1;j<=k;j++)visit(a[0]+(p[0]-a[0])*j/k,a[1]+(p[1]-a[1])*j/k)}else visit(p[0],p[1])}));
+  let cov=0;for(let i=0;i<n*n;i++)if(tg[i]&&hit[i])cov++;wTrace.dbg=[cov/nt,off/tot];return tot>8&&cov/nt>=.72&&off/tot<=.3}
+ const clr=h('button','btn ghost sm','↺ Clear');clr.addEventListener('click',()=>{if(el.classList.contains('lock'))return;strokes=[];draw();cx.change()});
+ el.append(cv,clr);
+ (document.fonts&&document.fonts.load?document.fonts.load('700 100px Andika',q.glyph||'A').catch(()=>{}):Promise.resolve()).then(build);setTimeout(()=>{if(!mask)build()},1200);
+ return {el,shown:()=>mask&&draw(),complete:()=>strokes.some(s=>s.length>3),correct:score,wrong(){strokes=[];draw();shake(cv)},
+  reveal(){solved=true;const tc=tint.getContext('2d');tc.globalCompositeOperation='source-in';tc.fillStyle=css('--good')||'#17A673';tc.fillRect(0,0,Z,Z);tc.globalCompositeOperation='source-over';strokes=[];draw()},
+  lock(){solved=true;draw();el.classList.add('lock')}}}
+
+function wSeq(q,cx){const dots=q.layout=='dots',el=h('div','w-seq '+q.layout),n=q.labels.length,order=q.order||q.labels.map((_,i)=>i);let k=0,miss=0,done=false;const btns=[];
+ const board=h('div',dots?'dboard':'hboard'),svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+ if(dots){svg.setAttribute('viewBox','0 0 100 100');svg.setAttribute('class','dlines');board.append(svg)}
+ const hit=i=>{if(done||el.classList.contains('lock'))return;if(i===order[k]){btns[i].classList.add('on');TTS.say(String(q.labels[i]),'en');sfx('tap');k++;line();if(k==n){done=true;if(dots)fin();cx.change()}}else if(!btns[i].classList.contains('on')){miss++;shake(btns[i])}};
+ function line(){if(!dots)return;const p=order.slice(0,k).map(i=>q.pts[i].join(',')).join(' ');svg.innerHTML=`<polyline points="${p}" fill="none" stroke="var(--blue)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`}
+ function fin(){svg.innerHTML=`<polygon points="${q.pts.map(p=>p.join(',')).join(' ')}" fill="var(--sel)" stroke="var(--blue)" stroke-width="2.2" stroke-linejoin="round"/>`;if(q.reveal)el.append(h('div','reveal',`<span class="em pop">${q.reveal[0]}</span><b>It is a ${q.reveal[1]}!</b>`))}
+ q.labels.forEach((lb,i)=>{const b=h('button',dots?'dot':'hopt opt',String(lb));b.dataset.i=i;if(dots){b.style.left=q.pts[i][0]+'%';b.style.top=q.pts[i][1]+'%'}b.addEventListener('click',()=>hit(i));btns.push(b)});
+ if(dots)btns.forEach(b=>board.append(b));else hopRows(n).forEach(r=>{const d=h('div','hrow');r.forEach(i=>d.append(btns[i]));board.append(d)});
+ board.addEventListener('pointermove',e=>{if(!e.buttons&&e.pointerType=='mouse')return;const t=document.elementFromPoint(e.clientX,e.clientY),b=t&&t.closest('[data-i]');if(b&&+b.dataset.i===order[k])hit(order[k])});
+ if(dots)board.style.touchAction='none';
+ el.append(board);
+ return {el,auto:true,complete:()=>done,correct:()=>done&&miss<=1,wrong(){k=0;miss=0;done=false;btns.forEach(b=>b.classList.remove('on'));svg.innerHTML='';const r=$('.reveal',el);r&&r.remove()},
+  reveal(){k=n;done=true;btns.forEach(b=>b.classList.add('on'));if(dots)fin()},lock(){el.classList.add('lock')}}}
+
+function makeWidget(q,cx){return ({mcq:wMcq,fill:wMcq,order:wOrder,sort:wSort,match:wMatch,collect:wCollect,grid:wGrid,trace:wTrace,seqtap:wSeq})[q.t](q,cx)}
+const EXAM_OK=['mcq','fill','order','sort','match','collect','grid'];
+const DHINT={mcq:'Look at each choice slowly, one at a time.',fill:'Try each tile in the empty box in your mind.',order:'Find the first one. Then find what comes next.',sort:'Take one at a time. Which basket does it belong in?',match:'Start with the pair you are sure about.',collect:'Count aloud each time you add one.',grid:'Do one square at a time.',trace:'Go slowly along the dotted path.',seqtap:'Find the next number each time.'};
+const HOW={fill:'Drag a tile into the empty box, or tap it.',order:'Drag each tile into a box, or tap tiles in order.',sort:'Drag each one into a basket. Or tap it, then tap the basket.',match:'Tap one on the left, then its partner on the right. You can drag too.',collect:'Drag or tap to put them in the basket.',grid:'Tap a colour, then tap a square.',trace:'Draw with your finger or the mouse.',seqtap:'Tap the numbers in order.'};
+/* ===== App: screens, practice sessions, mock test, parent area ===== */
+const BANK=buildBank(),TP=Object.fromEntries(TOPICS.map(t=>[t.id,t])),SUBJ={en:['English World','📚'],ma:['Math Adventure','🧮']},LV=['','Easy','Medium','Olympiad Challenge'];
+const BANKN=Object.values(BANK).reduce((a,l)=>a+l.length,0);
+const ts=id=>S.topics[id]||(S.topics[id]={seen:0,right:0,lvl:1,streak:0,miss:0,sess:0});
+const tstars=id=>{const t=S.topics[id];if(!t)return 0;const acc=t.seen?t.right/t.seen:0;return t.right>=15&&acc>=.7?3:t.right>=10?2:t.right>=5?1:0};
+const tdone=id=>tstars(id)>=2;
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
+const dayN=()=>S.daily.d==today()?S.daily.n:0;
+function addStar(n=1){S.stars+=n;if(S.daily.d!=today())S.daily={d:today(),n:0};S.daily.n+=n;if(!S.days.includes(today()))S.days.push(today());$('#starc').textContent='⭐ '+S.stars}
+const BADGES=[['alpha','Alphabet Explorer','🔤',()=>['alphabet','tracing','sequencing'].every(tdone),'Finish Alphabet, Tracing and Sequencing'],['phon','Phonics Star','🌟',()=>['beginsound','mysound','phonics'].every(tdone),"Finish Beginning Sound, What's My Sound? and Phonics"],['num','Number Champion','🏅',()=>['beforeafter','numbernames','counting'].every(tdone),'Finish Before or After, Number Names and Counting'],['shape','Shape Detective','🕵️',()=>['shapes','pattern','samediff'].every(tdone),'Finish Shapes, Pattern and Same or Different'],['hero','Olympiad Hero','🏆',()=>S.mocks.length>0,'Finish a Mock Olympiad test'],['try','Try-Again Hero','💪',()=>S.retryWins>=10,'Get 10 answers right on the second try'],['goal','Daily Sparkle','✨',()=>dayN()>=S.set.goal,'Reach your daily star goal'],['buddy','Practice Buddy','📅',()=>S.days.length>=3,'Practise on 3 different days']];
+function checkBadges(){const nw=[];BADGES.forEach(b=>{if(!S.badges[b[0]]&&b[3]()){S.badges[b[0]]=Date.now();nw.push(b)}});return nw}
+const SK=['#F8D9BC','#E8B88A','#C68B59','#8D5A3B'],HC=['#2B1B12','#6B4423','#B5651D','#141A33','#C0392B'],SHC=['#2F7BF5','#7B4FE0','#FFC93C','#3ED6A8','#FF6FAE'];
+function avatar(a,size=120,wave){const hc=HC[a.hc],sk=SK[a.sk],sh=SHC[a.sh],back=['',`<circle cx="24" cy="44" r="13" fill="${hc}"/><circle cx="104" cy="44" r="13" fill="${hc}"/>`,`<path d="M24 62a40 40 0 0 1 80 0v46H24z" fill="${hc}"/>`,[[30,40],[44,28],[64,24],[84,28],[98,40],[104,56],[24,56]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="13" fill="${hc}"/>`).join('')][a.hs];
+ return `<svg class="av${wave?' wave':''}" viewBox="0 0 128 150" width="${size}" height="${size*150/128}" role="img" aria-label="child avatar">${back}<path d="M26 150c0-28 14-44 38-44s38 16 38 44z" fill="${sh}"/><g class="arm"><path d="M96 124L112 98" stroke="${sh}" stroke-width="13" stroke-linecap="round"/><circle cx="114" cy="93" r="8.5" fill="${sk}"/></g><circle cx="64" cy="64" r="34" fill="${sk}"/><path d="M29 60a35 35 0 0 1 70 0c-8-11-20-15-35-15s-27 4-35 15z" fill="${hc}"/><circle cx="52" cy="66" r="4" fill="#1F2552"/><circle cx="76" cy="66" r="4" fill="#1F2552"/><circle cx="44" cy="76" r="5" fill="#FF8FA3" opacity=".55"/><circle cx="84" cy="76" r="5" fill="#FF8FA3" opacity=".55"/><path d="M52 79q12 11 24 0" fill="none" stroke="#1F2552" stroke-width="3" stroke-linecap="round"/></svg>`}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2600)}
+function confetti(n=26){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const fx=$('#fx'),cs=['#2F7BF5','#7B4FE0','#FFC93C','#3ED6A8','#FF6FAE'];for(let i=0;i<n;i++){const s=h('i');s.style.cssText=`left:${10+Math.random()*80}%;background:${cs[i%5]};animation-delay:${Math.random()*.25}s;--dx:${(Math.random()*2-1)*120}px;--r:${Math.random()*720}deg`;fx.append(s);setTimeout(()=>s.remove(),1900)}}
+
+let VIEW='home',ARG=null,CUR=null,PL=null,MK=null,leaveArm=0;
+function go(v,a){VIEW=v;ARG=a;TTS.stop();CUR=null;const el=$('#view');el.className='v-'+v;el.innerHTML='';VIEWS[v](el,a);window.scrollTo(0,0);$('#starc').textContent='⭐ '+S.stars;$('#sndb').textContent=S.set.sound?'🔊':'🔇'}
+const subjProg=s=>{const t=TOPICS.filter(x=>x.s==s);return [t.filter(x=>tdone(x.id)).length,t.length,t.reduce((a,x)=>a+tstars(x.id),0)]};
+const ring=(v,max,lab)=>{const p=Math.min(1,v/max),c=2*Math.PI*34;return `<svg class="ring" viewBox="0 0 80 80" width="92" height="92" role="img" aria-label="${lab}"><circle cx="40" cy="40" r="34" fill="none" stroke="var(--line)" stroke-width="9"/><circle cx="40" cy="40" r="34" fill="none" stroke="var(--yellow)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${c*p} ${c}" transform="rotate(-90 40 40)"/><text x="40" y="47" text-anchor="middle" font-size="20" font-weight="800" fill="currentColor">${v}</text></svg>`};
+
+const VIEWS={
+home(el){const nm=S.name?esc(S.name):'friend';
+ el.innerHTML=`<section class="hero"><div class="sky" aria-hidden="true"><i class="cl c1"></i><i class="cl c2"></i><i class="st s1">✦</i><i class="st s2">✦</i><i class="st s3">✦</i></div>
+ <div class="greet"><button class="avb" data-act="greet" aria-label="Say hello">${avatar(S.av[0],104,1)}</button><div class="bubble"><b>Hi ${nm}!</b><span>Ready to play and learn?</span></div><button class="avb" data-act="greet" aria-label="Say hello">${avatar(S.av[1],104,1)}</button></div>
+ <h1>Welcome to Your Magical Olympiad World!</h1>
+ ${S.name?`<p class="who"><span class="mini">${avatar(S.av[S.me],34)}</span> Playing as <b>${nm}</b> <button class="btn ghost sm" data-act="rename">✏️ Change name</button> <button class="btn ghost sm" data-act="look">🎨 My look</button></p>`:`<form class="namef" id="namef"><label for="nm">What is your name?</label><div><input id="nm" maxlength="16" autocomplete="off" placeholder="Type your name"><button class="btn yellow">Save</button></div></form>`}
+ <div class="cta"><button class="btn blue big" data-act="dash">▶ Start Learning</button><button class="btn purple big" data-act="quiz">🎯 Practice Quiz</button><button class="btn yellow big" data-act="mockset">🏆 Mock Olympiad</button></div></section>
+ <section class="worlds">${['en','ma'].map(s=>{const p=subjProg(s);return `<button class="world ${s}" data-act="dash" data-s="${s}"><span class="wi">${SUBJ[s][1]}</span><span class="wt"><b>${SUBJ[s][0]}</b><small>${p[1]} topics · ${p[0]} finished · ${p[2]} ⭐</small><span class="bar"><i style="width:${p[0]/p[1]*100}%"></i></span></span></button>`}).join('')}
+ <div class="goalc">${ring(dayN(),S.set.goal,'stars today')}<div><b>Today's goal</b><p>${dayN()>=S.set.goal?'You reached your goal. Wonderful!':`Earn ${S.set.goal} stars today. You have ${dayN()}.`}</p></div></div></section>`;
+ const f=$('#namef');f&&f.addEventListener('submit',e=>{e.preventDefault();const v=$('#nm').value.trim();if(v){S.name=v;save();go('home')}})},
+
+look(el){el.innerHTML=`<div class="panel"><h2>🎨 Make your two friends</h2><p class="sub">Tap the colours to change each friend. Pick which one is you.</p><div class="looks">${[0,1].map(i=>{const a=S.av[i],row=(k,arr,lab)=>`<div class="swr"><small>${lab}</small>${arr.map((c,j)=>`<button class="sw${a[k]==j?' sel':''}" data-act="av" data-i="${i}" data-k="${k}" data-v="${j}" style="background:${c}" aria-label="${lab} ${j+1}"></button>`).join('')}</div>`;
+  return `<div class="lookc">${avatar(a,120)}${row('sk',SK,'Skin')}${row('hc',HC,'Hair colour')}<div class="swr"><small>Hair style</small>${['Short','Buns','Long','Curly'].map((n,j)=>`<button class="chipb${a.hs==j?' sel':''}" data-act="av" data-i="${i}" data-k="hs" data-v="${j}">${n}</button>`).join('')}</div>${row('sh',SHC,'Shirt')}<button class="btn ${S.me==i?'mint':'ghost'}" data-act="me" data-i="${i}">${S.me==i?'✔ This is me':'This is me'}</button></div>`}).join('')}</div><button class="btn blue" data-act="home">Done</button></div>`},
+
+dash(el,a){const s=(a&&a.s)||S.dashS||'en';S.dashS=s;const list=TOPICS.filter(t=>t.s==s);const last=TP[S.last]&&TP[S.last].s==s?TP[S.last]:list.find(t=>!tdone(t.id))||list[0];
+ el.innerHTML=`<div class="tabs" role="tablist">${['en','ma'].map(k=>`<button role="tab" aria-selected="${k==s}" class="tab${k==s?' on':''}" data-act="dash" data-s="${k}">${SUBJ[k][1]} ${SUBJ[k][0]}</button>`).join('')}</div>
+ <button class="cont" data-act="topic" data-id="${last.id}"><span class="wi">${last.icon}</span><span><small>Continue learning</small><b>${last.name}</b></span><span class="goarrow">▶</span></button>
+ <h2 class="sec">Your learning path</h2><p class="sub">Earn 2 stars to finish a topic. Three right answers in a row unlock the next level.</p>
+ <div class="tgrid">${list.map((t,i)=>{const st=tstars(t.id),x=S.topics[t.id],lv=x?x.lvl:1,acc=x&&x.seen?Math.round(x.right/x.seen*100):null;return `<button class="tcard${tdone(t.id)?' done':''}" data-act="topic" data-id="${t.id}"><span class="tn">${i+1}</span><span class="ti">${t.icon}</span><b>${t.name}</b><span class="tst" aria-label="${st} of 3 stars">${'★'.repeat(st)}<i>${'★'.repeat(3-st)}</i></span><span class="tm"><span class="chip lv${lv}">${LV[lv]}</span>${acc!=null?`<span class="chip">${acc}% right</span>`:'<span class="chip">New</span>'}</span>${tdone(t.id)?'<span class="tick">✔</span>':''}</button>`}).join('')}</div>
+ <h2 class="sec">Badges</h2><div class="badges">${BADGES.map(b=>`<div class="badge${S.badges[b[0]]?' got':''}"><span>${b[2]}</span><b>${b[1]}</b><small>${S.badges[b[0]]?'Unlocked!':b[4]}</small></div>`).join('')}</div>`},
+
+topic(el,a){const t=TP[a.id],x=ts(t.id);S.last=t.id;save();
+ el.innerHTML=`<div class="panel intro"><div class="qmeta"><span class="chip">${SUBJ[t.s][1]} ${SUBJ[t.s][0]}</span><span class="chip lv${x.lvl}">${LV[S.set.diff||x.lvl]}</span></div><h2><span class="wi">${t.icon}</span> ${t.name}</h2>
+ <div class="qhead"><button class="ib spk" data-act="sayintro" aria-label="Hear it">🔊</button><div class="qtext"><p class="qp">${t.it}</p>${S.set.hi?`<p class="qh" lang="hi">${t.ih}</p>`:''}</div></div>
+ <h3>Look at this</h3><div class="exs">${t.ex.map(e=>`<div class="ex">${e}</div>`).join('')}</div>
+ <div class="cta"><button class="btn blue big" data-act="learn" data-id="${t.id}">▶ Let's play</button><button class="btn ghost" data-act="dash">← All topics</button></div></div>`;
+ CUR={q:{p:t.it,h:t.ih}}},
+
+quiz(el,a){const s=(a&&a.s)||'en';el.innerHTML=`<div class="panel"><h2>🎯 Practice Quiz</h2><p class="sub">Choose a subject and a topic. You get ${S.set.qn} questions.</p><div class="tabs">${['en','ma'].map(k=>`<button class="tab${k==s?' on':''}" data-act="quiz" data-s="${k}">${SUBJ[k][1]} ${SUBJ[k][0]}</button>`).join('')}</div>
+ <div class="pick"><button class="pk all" data-act="startquiz" data-s="${s}">🎲 All topics mixed</button>${TOPICS.filter(t=>t.s==s).map(t=>`<button class="pk" data-act="startquiz" data-s="${s}" data-id="${t.id}">${t.icon} ${t.name}</button>`).join('')}</div></div>`},
+
+play(el){el.innerHTML=`<div class="pbar"><div class="pips" id="pips"></div><span class="chip" id="pstar">⭐ 0</span><button class="btn ghost sm" data-act="quit">✕ Stop</button></div><div id="qhost"></div><div class="qact"><button class="btn ghost" id="bhint" data-act="hint">💡 Hint</button><button class="btn mint big" id="bcheck" data-act="check">✔ Check</button><button class="btn blue big" id="bnext" data-act="next" hidden>Next ➜</button></div>`;advance()},
+
+results(el){const o=PL.res.filter(r=>!r.retry),n=o.length,right=o.filter(r=>r.first).length,miss=o.filter(r=>!r.first),weak=[...new Set(miss.map(r=>r.q.topic))],good=[...new Set(o.filter(r=>r.first).map(r=>r.q.topic))].filter(t=>!weak.includes(t)),nw=PL.newB||[];
+ const msg=right==n?'Perfect! You are a star!':right>=n*.7?'Wonderful work!':right>=n*.4?'Good effort! You are getting better.':'You kept trying. That is how we learn!';
+ el.innerHTML=`<div class="panel res"><div class="bigem pop">${right>=n*.7?'🏆':'🌟'}</div><h2>${msg}</h2><div class="stats"><div><b>${PL.stars}</b><small>⭐ stars earned</small></div><div><b>${right} / ${n}</b><small>right first time</small></div><div><b>${TOPICS.filter(t=>tdone(t.id)).length}</b><small>topics finished</small></div></div>
+ ${nw.length?`<div class="newb">${nw.map(b=>`<div class="badge got"><span>${b[2]}</span><b>New badge: ${b[1]}</b></div>`).join('')}</div>`:''}
+ ${good.length?`<p class="rl"><b>Going well:</b> ${good.map(t=>TP[t].icon+' '+TP[t].name).join(', ')}</p>`:''}${weak.length?`<p class="rl"><b>Practise more:</b> ${weak.map(t=>`<button class="chipb" data-act="topic" data-id="${t}">${TP[t].icon} ${TP[t].name}</button>`).join(' ')}</p>`:''}
+ <div class="cta">${miss.length?`<button class="btn purple big" data-act="retrymiss">↻ Try the missed ones again</button>`:''}<button class="btn blue big" data-act="again">▶ Play again</button><button class="btn ghost" data-act="dash">All topics</button></div></div>`;
+ sfx('win');confetti(40);TTS.say(msg,'en')},
+
+mockset(el,a){const s=(a&&a.s)||'en';el.innerHTML=`<div class="panel"><h2>🏆 Mock Olympiad</h2><p class="sub">A practice test with questions from every topic. You see your results at the end. These are practice questions made for this app, not official NOF papers.</p><div class="tabs">${['en','ma'].map(k=>`<button class="tab${k==s?' on':''}" data-act="mockset" data-s="${k}">${SUBJ[k][1]} ${SUBJ[k][0]}</button>`).join('')}</div>
+ <div class="cta"><button class="btn blue big" data-act="startmock" data-s="${s}" data-n="10">Short test · 10 questions</button><button class="btn purple big" data-act="startmock" data-s="${s}" data-n="${S.set.mockN}">Full mock · ${S.set.mockN} questions</button></div><p class="sub">${S.set.timer?`⏱ Timer is on: ${S.set.mins} minutes.`:'⏱ No timer. Take your time. (Parents can turn a timer on.)'}</p></div>`},
+
+mock(el){el.innerHTML=`<div class="pbar"><b id="mcount"></b><span class="chip" id="mtime" ${S.set.timer?'':'hidden'}></span><button class="btn yellow sm" data-act="mfinish">Finish test</button></div><div class="mnav" id="mnav"></div><div id="qhost"></div><div class="qact"><button class="btn ghost big" data-act="mprev">← Back</button><button class="btn blue big" data-act="mnext">Next ➜</button></div>`;mockShow(MK.i)},
+
+mockcheck(el){const un=MK.items.map((it,i)=>it.w&&it.w.complete()?-1:i).filter(i=>i>=0);el.innerHTML=`<div class="panel res"><div class="bigem">📝</div><h2>Ready to finish?</h2><p class="sub">You answered ${MK.items.length-un.length} of ${MK.items.length} questions.</p>${un.length?`<p class="rl"><b>Not answered yet:</b> ${un.map(i=>`<button class="chipb" data-act="mjump" data-i="${i}">Question ${i+1}</button>`).join(' ')}</p>`:'<p class="rl">Every question has an answer. Well done!</p>'}<div class="cta"><button class="btn mint big" data-act="msubmit">✔ Submit my test</button><button class="btn ghost big" data-act="mjump" data-i="${MK.i}">← Go back to the test</button></div></div>`},
+
+mockres(el){const n=MK.items.length,sc=MK.score,weak=[...new Set(MK.items.filter(it=>!it.ok).map(it=>it.q.topic))],nw=MK.newB||[];
+ el.innerHTML=`<div class="panel res"><div class="bigem pop">🏆</div><h2>${sc>=n*.8?'Olympiad champion!':sc>=n*.5?'Great effort!':'Well done for finishing the test!'}</h2><div class="stats"><div><b>${sc} / ${n}</b><small>correct answers</small></div><div><b>${sc}</b><small>⭐ stars earned</small></div><div><b>${Math.max(1,Math.round(MK.secs/60))} min</b><small>time taken</small></div></div>
+ ${nw.length?`<div class="newb">${nw.map(b=>`<div class="badge got"><span>${b[2]}</span><b>New badge: ${b[1]}</b></div>`).join('')}</div>`:''}
+ <div class="mnav">${MK.items.map((it,i)=>`<button class="mn ${it.ok?'ok':it.ans?'no':'skip'}" data-act="review" data-i="${i}" aria-label="Question ${i+1} ${it.ok?'correct':'to practise'}">${i+1}</button>`).join('')}</div>
+ ${weak.length?`<p class="rl"><b>Practise more:</b> ${weak.map(t=>`<button class="chipb" data-act="topic" data-id="${t}">${TP[t].icon} ${TP[t].name}</button>`).join(' ')}</p>`:'<p class="rl">Every answer was correct!</p>'}
+ <div class="cta"><button class="btn blue big" data-act="review" data-i="0">🔍 Review answers</button>${n-sc?`<button class="btn purple big" data-act="mretry">↻ Try the missed ones again</button>`:''}<button class="btn ghost" data-act="home">Home</button></div></div>`},
+
+review(el,a){const i=+a.i,it=MK.items[i],n=MK.items.length;el.innerHTML=`<div class="pbar"><b>Review · Question ${i+1} of ${n}</b><span class="chip ${it.ok?'okc':'noc'}">${it.ok?'✔ Correct':it.ans?'Not yet':'Skipped'}</span><button class="btn ghost sm" data-act="mres">Back to results</button></div><div id="qhost"></div><div class="qact"><button class="btn ghost big" data-act="review" data-i="${Math.max(0,i-1)}" ${i?'':'disabled'}>← Back</button><button class="btn blue big" data-act="${i<n-1?'review':'mres'}" data-i="${i+1}">${i<n-1?'Next ➜':'Done'}</button></div>`;
+ if(!it.rev){it.w.reveal();it.w.lock();it.rev=true}$('#qhost').append(it.card);$('.fb',it.card).innerHTML=`<div class="fbx ${it.ok?'good':'info'}"><b>${it.ok?'You got it right.':'The right answer is shown.'}</b><span>${it.q.e}</span></div>`;it.w.shown&&it.w.shown();CUR=it},
+
+gate(el){const a=3+Math.floor(Math.random()*6),b=4+Math.floor(Math.random()*6);ARG={ans:a*b,v:''};el.innerHTML=`<div class="panel gate"><h2>👪 Grown-ups only</h2><p class="sub">To open the parent area, answer this:</p><p class="gq">${a} × ${b} = <span id="gv" class="gv">?</span></p><div class="keys">${[1,2,3,4,5,6,7,8,9,'⌫',0,'OK'].map(k=>`<button class="key" data-act="gkey" data-k="${k}">${k}</button>`).join('')}</div><button class="btn ghost" data-act="home">← Back</button></div>`},
+
+parent(el){const acc=id=>{const t=S.topics[id];return t&&t.seen?Math.round(t.right/t.seen*100):null},seen=TOPICS.filter(t=>S.topics[t.id]&&S.topics[t.id].seen>=3),sorted=seen.slice().sort((a,b)=>acc(b.id)-acc(a.id)),weak=sorted.slice().reverse().filter(t=>acc(t.id)<70).slice(0,3),next=weak.length?weak:TOPICS.filter(t=>!S.topics[t.id]||!S.topics[t.id].seen).slice(0,3);
+ const sel=(k,opts)=>`<select id="set-${k}" data-set="${k}">${opts.map(o=>`<option value="${o[0]}"${String(S.set[k])==String(o[0])?' selected':''}>${o[1]}</option>`).join('')}</select>`;
+ el.innerHTML=`<div class="panel par"><h2>👪 Parent dashboard</h2>
+ <p class="note">${storeOK?'Progress is saved only in this browser on this device. It does not sync to other devices, and clearing browser data erases it.':'This browser is not letting the app save. Progress will be lost when the page closes.'}</p>
+ <div class="stats">${['en','ma'].map(s=>{const p=subjProg(s);return `<div><b>${p[0]} / ${p[1]}</b><small>${SUBJ[s][0]} topics finished</small></div>`}).join('')}<div><b>${S.stars}</b><small>⭐ stars in total</small></div><div><b>${Math.round(S.time/60)} min</b><small>time spent learning</small></div></div>
+ <div class="two"><div><h3>Strongest topics</h3>${sorted.slice(0,3).map(t=>`<p class="rl">${t.icon} ${t.name} · ${acc(t.id)}%</p>`).join('')||'<p class="rl">Not enough practice yet.</p>'}</div><div><h3>${weak.length?'Needs more practice':'Recommended next'}</h3>${next.map(t=>`<p class="rl"><button class="chipb" data-act="topic" data-id="${t.id}">${t.icon} ${t.name}</button>${acc(t.id)!=null?' · '+acc(t.id)+'%':''}</p>`).join('')||'<p class="rl">All topics are going well.</p>'}</div></div>
+ <h3>Accuracy by topic</h3><div class="tscroll"><table><thead><tr><th>Topic</th><th>Level</th><th>Answered</th><th>Right first time</th><th>Stars</th></tr></thead><tbody>${TOPICS.map((t,i)=>{const x=S.topics[t.id],a=acc(t.id);return `${i==0||TOPICS[i-1].s!=t.s?`<tr class="sh"><td colspan="5">${SUBJ[t.s][0]}</td></tr>`:''}<tr><td>${t.icon} ${t.name}</td><td>${x?LV[x.lvl]:'–'}</td><td class="num">${x?x.seen:0}</td><td><span class="abar"><i style="width:${a||0}%"></i></span> <span class="num">${a==null?'–':a+'%'}</span></td><td class="num">${tstars(t.id)} / 3</td></tr>`}).join('')}</tbody></table></div>
+ <h3>Mock test history</h3>${S.mocks.length?`<div class="tscroll"><table><thead><tr><th>Date</th><th>Subject</th><th>Score</th><th>Time</th></tr></thead><tbody>${S.mocks.slice().reverse().map(m=>`<tr><td>${new Date(m.d).toLocaleDateString()}</td><td>${SUBJ[m.subj][0]}</td><td class="num">${m.score} / ${m.n}</td><td class="num">${Math.max(1,Math.round(m.secs/60))} min</td></tr>`).join('')}</tbody></table></div>`:'<p class="rl">No mock tests taken yet.</p>'}
+ <h3>Settings</h3><div class="sets">
+ <label for="set-name">Child's name<input id="set-name" data-set="name" maxlength="16" value="${esc(S.name)}"></label>
+ <label for="set-sound">Sound and voice${sel('sound',[[true,'On'],[false,'Off']])}</label>
+ <label for="set-vol">Volume<input id="set-vol" type="range" min="0.1" max="1" step="0.1" data-set="vol" value="${S.set.vol}"></label>
+ <label for="set-hi">Instruction language${sel('hi',[[false,'English only'],[true,'English + Hindi help']])}</label>
+ <label for="set-diff">Difficulty${sel('diff',[[0,'Automatic (adapts to the child)'],[1,'Easy'],[2,'Medium'],[3,'Olympiad Challenge']])}</label>
+ <label for="set-qn">Questions per practice${sel('qn',[[5,'5'],[8,'8'],[10,'10'],[15,'15']])}</label>
+ <label for="set-goal">Daily star goal${sel('goal',[[5,'5'],[10,'10'],[15,'15'],[20,'20']])}</label>
+ <label for="set-mockN">Full mock length${sel('mockN',[[15,'15 questions'],[20,'20 questions'],[30,'30 questions'],[40,'40 questions']])}</label>
+ <label for="set-timer">Mock test timer${sel('timer',[[false,'Off'],[true,'On']])}</label>
+ <label for="set-mins">Timer length${sel('mins',[[10,'10 minutes'],[15,'15 minutes'],[20,'20 minutes'],[30,'30 minutes'],[45,'45 minutes']])}</label></div>
+ <p class="note">${TTS.ok?(TTS.hi?'A Hindi voice is available on this device.':'This device has no Hindi voice, so Hindi help is shown as text and the English voice reads the question.'):'This browser has no speech voice. All instructions are shown as text.'} The question bank holds ${BANKN} fixed questions across ${TOPICS.length} topics, and makes new ones from the same templates when a child has seen them all.</p>
+ <div class="cta"><button class="btn ghost" data-act="home">← Back to the child's area</button><span id="rst"><button class="btn danger" data-act="reset1">Reset all progress</button></span></div></div>`}
+};
+
+/* ---------- practice session ---------- */
+function pickQ(tp,L,used,ok){const f=q=>!used.has(q.id)&&(!ok||ok(q));let c=BANK[tp.id].filter(q=>q.L==L&&f(q));if(!c.length){for(let i=0;i<40;i++){const q=freshQ(tp,L);if(!ok||ok(q))return q}c=BANK[tp.id].filter(f);if(!c.length)c=BANK[tp.id].filter(q=>!ok||ok(q))}const q=c[Math.floor(Math.random()*c.length)];used.add(q.id);return q}
+function pickTopic(s){const l=TOPICS.filter(t=>t.s==s),w=l.map(t=>{const x=S.topics[t.id];return !x||!x.seen?2:x.right/x.seen<.6?3:1});let r=Math.random()*w.reduce((a,b)=>a+b,0);for(let i=0;i<l.length;i++){r-=w[i];if(r<=0)return l[i]}return l[0]}
+function startSession(o){PL=Object.assign({i:0,served:0,used:new Set(),queue:[],res:[],stars:0},o);go('play')}
+function nextItem(){const d=PL.queue.findIndex(x=>x.due<=PL.served);if(d>=0)return PL.queue.splice(d,1)[0];if(PL.i>=PL.count)return PL.queue.shift()||null;let q;if(PL.fixed)q=PL.fixed[PL.i];else{const tp=PL.topic?TP[PL.topic]:pickTopic(PL.subj);q=pickQ(tp,S.set.diff||ts(tp.id).lvl,PL.used)}PL.i++;return {q,retry:false}}
+function qCard(q,cx,tag){const tp=TP[q.topic],card=h('div','qcard');
+ card.innerHTML=`<div class="qmeta"><span class="chip">${tp.icon} ${tp.name}</span><span class="chip lv${q.L}">${LV[q.L]}</span>${tag||''}</div><div class="qhead"><button class="ib spk" data-act="sayq" aria-label="Hear the question">🔊</button><div class="qtext"><p class="qp">${q.p}</p>${S.set.hi?`<p class="qh" lang="hi">${q.h}</p>`:''}</div></div>${q.stim?`<div class="stim">${q.stim}</div>`:''}<div class="wbox"></div>${HOW[q.t]?`<p class="how">${HOW[q.t]}</p>`:''}<div class="fb" aria-live="polite"></div>`;
+ const w=makeWidget(q,cx);$('.wbox',card).append(w.el);let cnt=0;$$('.stim .grp.tap .em',card).forEach(e=>{e.tabIndex=0;e.setAttribute('role','button');const f=()=>{if(e.dataset.n)return;e.dataset.n=++cnt;TTS.say(String(cnt),'en')};e.addEventListener('click',f);e.addEventListener('keydown',k=>{if(k.key=='Enter')f()})});return {card,w,q}}
+function pips(){const o=PL.res.filter(r=>!r.retry);$('#pips').innerHTML=Array.from({length:PL.count},(_,i)=>`<i class="${o[i]?(o[i].first?'ok':'no'):i==o.length&&!PL.cur.retry?'cur':''}"></i>`).join('');$('#pstar').textContent='⭐ '+PL.stars}
+function advance(){const it=nextItem();if(!it)return finishSession();PL.served++;PL.cur=it;it.att=0;it.done=false;let c=null;c=qCard(it.q,{change(){if(!c||it.done)return;const w=c.w;if(w.auto){if(w.complete())submit()}else $('#bcheck').disabled=!w.complete()}},it.retry?'<span class="chip okc">↻ One more try</span>':'');CUR=c;const host=$('#qhost');host.innerHTML='';host.append(c.card);c.w.shown&&c.w.shown();$('#bnext').hidden=true;$('#bhint').hidden=false;$('#bcheck').hidden=!!c.w.auto;$('#bcheck').disabled=true;pips();sayQ(it.q)}
+const PR=['Great job!','Wonderful!','You did it!','Super!','Brilliant!'],PRH=['शाबाश!','बहुत बढ़िया!','वाह, सही जवाब!'];
+function fb(cls,head,body){$('.fb',CUR.card).innerHTML=`<div class="fbx ${cls}"><b>${head}</b>${body?`<span>${body}</span>`:''}</div>`}
+function submit(){const it=PL.cur,w=CUR.w,q=it.q;if(it.done||!w.complete())return;
+ if(w.correct()){it.done=true;w.reveal();w.lock();const first=it.att==0,p=PR[Math.floor(Math.random()*PR.length)];sfx('good');if(first)confetti(14);fb('good',p+(S.set.hi?' '+PRH[Math.floor(Math.random()*3)]:'')+' ⭐',q.e);TTS.say(p,'en');record(it,first,true);if(!first&&!it.retry&&PL.queue.length<4)PL.queue.push({q,retry:true,due:PL.served+3});endQ()}
+ else{it.att++;sfx('oops');if(it.att<2){w.wrong();fb('oops',"Let's try again!"+(S.set.hi?' चलो फिर से कोशिश करें!':''),q.hint||DHINT[q.t]);TTS.say("Let's try again!",'en');if(!w.auto)$('#bcheck').disabled=!w.complete()}
+  else{it.done=true;w.reveal();w.lock();fb('info','Good try! Here is the answer.',q.e);TTS.say('Good try! Here is the answer.','en');record(it,false,false);if(!it.retry&&PL.queue.length<4)PL.queue.push({q,retry:true,due:PL.served+3});endQ()}}}
+function endQ(){$('#bcheck').hidden=true;$('#bhint').hidden=true;const n=$('#bnext');n.hidden=false;n.focus({preventScroll:true});pips();save()}
+function record(it,first,ok){const t=ts(it.q.topic);if(!it.retry){t.seen++;if(first){t.right++;t.streak++;t.miss=0;if(!S.set.diff&&t.streak>=3&&t.lvl<3){t.lvl++;t.streak=0;toast(`Level up! ${LV[t.lvl]} unlocked in ${TP[it.q.topic].name} 🎉`)}}else{t.streak=0;t.miss++;if(!S.set.diff&&t.miss>=2&&t.lvl>1){t.lvl--;t.miss=0}}}else if(ok)S.retryWins++;if(ok){addStar();PL.stars++}PL.res.push({q:it.q,first:first&&ok,ok,retry:it.retry})}
+function finishSession(){if(PL.topic){ts(PL.topic).sess++;S.last=PL.topic}PL.newB=checkBadges();save();go('results')}
+
+/* ---------- mock test ---------- */
+function startMock(s,n){const tps=TOPICS.filter(t=>t.s==s).sort(()=>Math.random()-.5),used=new Set(),items=[],lv=[1,2,1,2,3];for(let i=0;i<n;i++){const q=pickQ(tps[i%tps.length],lv[i%5],used,x=>EXAM_OK.includes(x.t));items.push({q})}
+ MK={subj:s,items:items.sort(()=>Math.random()-.5),i:0,t0:Date.now(),left:S.set.timer?S.set.mins*60:null,done:false};go('mock')}
+function mockShow(i){MK.i=i;const it=MK.items[i];if(!it.w){const c=qCard(it.q,{exam:true,change(){mockNav()}});it.w=c.w;it.card=c.card}CUR=it;const host=$('#qhost');host.innerHTML='';host.append(it.card);it.w.shown&&it.w.shown();$('#mcount').textContent=`Question ${i+1} of ${MK.items.length}`;mockNav();sayQ(it.q)}
+function mockNav(){const nv=$('#mnav');if(!nv)return;nv.innerHTML=MK.items.map((it,j)=>`<button class="mn${j==MK.i?' cur':''}${it.w&&it.w.complete()?' ans':''}" data-act="mjump" data-i="${j}" aria-label="Question ${j+1}${it.w&&it.w.complete()?', answered':''}">${j+1}</button>`).join('')}
+function mockSubmit(){if(MK.done)return;MK.done=true;MK.secs=Math.round((Date.now()-MK.t0)/1000);let sc=0;MK.items.forEach(it=>{if(!it.w){const c=qCard(it.q,{exam:true,change(){}});it.w=c.w;it.card=c.card}it.ans=it.w.complete();it.ok=it.ans&&it.w.correct();const t=ts(it.q.topic);t.seen++;if(it.ok){t.right++;sc++}});MK.score=sc;addStar(sc);S.mocks.push({d:Date.now(),subj:MK.subj,score:sc,n:MK.items.length,secs:MK.secs});MK.newB=checkBadges();save();go('mockres');sfx('win');confetti(40)}
+const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+setInterval(()=>{if(document.hidden)return;if(['play','mock','topic','review'].includes(VIEW)){S.time++;if(S.time%20==0)save()}if(VIEW=='mock'&&MK&&MK.left!=null&&!MK.done){MK.left--;const e=$('#mtime');if(e)e.textContent='⏱ '+fmt(Math.max(0,MK.left));if(MK.left<=0){toast("Time is up. Let's see how you did!");mockSubmit()}}},1000);
+
+/* ---------- actions ---------- */
+const ACT={
+ home(){if((VIEW=='mock'||VIEW=='mockcheck')&&MK&&!MK.done&&Date.now()-leaveArm>3500){leaveArm=Date.now();return toast('Tap 🏠 again to leave the test. Your answers will not be saved.')}go('home')},
+ dash:d=>go('dash',{s:d.s}),topic:d=>go('topic',{id:d.id}),quiz:d=>go('quiz',{s:d.s}),mockset:d=>go('mockset',{s:d.s}),look:()=>go('look'),
+ greet(){TTS.say(`Hi ${S.name||'friend'}! Welcome to your magical Olympiad world!`,'en')},
+ rename(){S.name='';go('home');const i=$('#nm');i&&i.focus()},
+ av(d){S.av[+d.i][d.k]=+d.v;save();go('look')},me(d){S.me=+d.i;save();go('look')},
+ sound(){S.set.sound=!S.set.sound;if(!S.set.sound)TTS.stop();save();$('#sndb').textContent=S.set.sound?'🔊':'🔇';toast(S.set.sound?'Sound is on':'Sound is off')},
+ parent(){go('gate')},
+ gkey(d){const k=d.k;if(k=='⌫')ARG.v=ARG.v.slice(0,-1);else if(k=='OK'){if(+ARG.v===ARG.ans)return go('parent');ARG.v='';toast('That is not right. Please ask a grown-up.')}else if(ARG.v.length<3)ARG.v+=k;$('#gv').textContent=ARG.v||'?'},
+ sayq(){if(CUR&&CUR.q)sayQ(CUR.q)},sayintro(){if(CUR)sayQ(CUR.q)},
+ learn:d=>startSession({mode:'learn',topic:d.id,subj:TP[d.id].s,count:S.set.qn}),
+ startquiz:d=>startSession({mode:'quiz',topic:d.id||null,subj:d.s,count:S.set.qn}),
+ check:()=>submit(),next:()=>advance(),
+ hint(){const q=CUR.q,w=CUR.w;if(PL.cur.done)return;w.hint&&w.hint();fb('info','💡 Hint',q.hint||DHINT[q.t]);TTS.say(q.hint||DHINT[q.t],'en')},
+ quit(){if(PL.res.length)finishSession();else go(PL.topic?'dash':'home')},
+ again(){startSession({mode:PL.mode,topic:PL.topic,subj:PL.subj,count:S.set.qn})},
+ retrymiss(){const m=PL.res.filter(r=>!r.retry&&!r.first).map(r=>r.q);startSession({mode:'retry',fixed:m,count:m.length,topic:PL.topic,subj:PL.subj,isRetry:true})},
+ startmock:d=>startMock(d.s,+d.n),mprev(){if(MK.i>0)mockShow(MK.i-1)},mnext(){MK.i<MK.items.length-1?mockShow(MK.i+1):go('mockcheck')},
+ mjump(d){if(VIEW!='mock'){MK.i=+d.i;go('mock')}else mockShow(+d.i)},mfinish:()=>go('mockcheck'),msubmit:()=>mockSubmit(),mres:()=>go('mockres'),review:d=>go('review',{i:d.i}),
+ mretry(){const m=MK.items.filter(it=>!it.ok).map(it=>it.q);startSession({mode:'retry',fixed:m,count:m.length,subj:MK.subj,isRetry:true})},
+ reset1(){$('#rst').innerHTML='<b>Erase all stars, levels and test history?</b> <button class="btn danger" data-act="reset2">Yes, erase everything</button> <button class="btn ghost" data-act="parentv">Cancel</button>'},
+ reset2(){const keep={name:S.name,av:S.av,me:S.me,set:S.set};S=Object.assign(DEF(),keep);save();go('parent');toast('Progress has been reset.')},parentv:()=>go('parent')
+};
+document.addEventListener('click',e=>{const s=e.target.closest('[data-say]');if(s){TTS.say(s.dataset.say,'en');return}const a=e.target.closest('[data-act]');if(a&&!a.disabled&&ACT[a.dataset.act])ACT[a.dataset.act](a.dataset,a)});
+document.addEventListener('change',e=>{const el=e.target.closest('[data-set]');if(!el)return;const k=el.dataset.set,v=el.value;if(k=='name')S.name=v.trim();else if(k=='vol')S.set.vol=+v;else if(v=='true'||v=='false')S.set[k]=v=='true';else S.set[k]=+v;save();if(k=='hi'||k=='sound')go('parent')});
+load();TTS.init();
+const start=()=>go('home');
+window.claude&&window.claude.hot&&window.claude.hot.ready?window.claude.hot.ready(start):start();
+</script>
+
+</body></html>
